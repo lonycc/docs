@@ -13,7 +13,7 @@ from selenium.webdriver.common.keys import Keys
 import time
 
 browser = webdriver.Chrome()
-browser.get('http://www.alexa.cn/southcn.com')
+browser.get('http://www.alexa.cn/baidu.com')
 #browser.maximize_window()  #最大化窗口
 #browser.set_window_size(480,800)  #固定宽和高
 #browser.back()     #后退
