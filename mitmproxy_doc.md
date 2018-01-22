@@ -1,6 +1,6 @@
 # mitmproxy
 
-安装方式：`pip install proxymitm`
+安装方式：`pip install mitmproxy`
 
 功能说明：
 
