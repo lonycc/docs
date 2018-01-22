@@ -14,18 +14,18 @@ import time
 
 browser = webdriver.Chrome()
 browser.get('http://www.alexa.cn/baidu.com')
-#browser.maximize_window()  #最大化窗口
-#browser.set_window_size(480,800)  #固定宽和高
-#browser.back()     #后退
-#browser.forward()  #前进
-#browser.find_element_by_name('username').send_keys('selenium')
-#browser.find_element_by_id('key').click()
-#browser.find_element_by_tag_name('input')
-#browser.find_element_by_css_selector('#kw')
-#browser.find_element_by_css_selector('a[name="fuck"]')
-#browser.find_element_by_xpath('//input[@id="kw"]')
-#browser.find_element_by_link_text('click me').click()
-#browser.find_element_by_partial_link_text('click').click()
+# browser.maximize_window()  #最大化窗口
+# browser.set_window_size(480,800)  #固定宽和高
+# browser.back()     #后退
+# browser.forward()  #前进
+# browser.find_element_by_name('username').send_keys('selenium')
+# browser.find_element_by_id('key').click()
+# browser.find_element_by_tag_name('input')
+# browser.find_element_by_css_selector('#kw')
+# browser.find_element_by_css_selector('a[name="fuck"]')
+# browser.find_element_by_xpath('//input[@id="kw"]')
+# browser.find_element_by_link_text('click me').click()
+# browser.find_element_by_partial_link_text('click').click()
 
 worldrank = browser.find_element_by_xpath('//ul[@class="info1"]/li[1]/font').text
 week = browser.find_element_by_xpath('//ul[@class="info1"]/li[3]/font').text
@@ -34,8 +34,8 @@ season = browser.find_element_by_xpath('//ul[@class="info1"]/li[7]/font').text
 
 title = browser.title  #当前标题
 
-#time.sleep(1)
-#browser.close()  #关闭当前窗口
+# time.sleep(1)
+# browser.close()  #关闭当前窗口
 
 browser.quit()   #关闭全部窗口
 
@@ -59,13 +59,13 @@ def test_selenium(url):
     driver.find_element_by_id('password').send_keys('password') #填充
     driver.find_element_by_xpath('//input[@name="user"]').send_keys('admin')
     driver.find_element_by_id('submit').click()
-    #driver.find_element_by_xpath('//form[@name="lzform"]').submit()
-    #cookies = driver.get_cookies() #获取cookies
-    #driver.switch_to.alert() 
-    #driver.accept()
-    #driver.dismiss()
-    #driver.execute_script('一段js代码') #自定义弹窗, 可以将其dispaly设置为none
-    #driver.switch_to.iframe('frame_name')
+    # driver.find_element_by_xpath('//form[@name="lzform"]').submit()
+    # cookies = driver.get_cookies() #获取cookies
+    # driver.switch_to.alert() #切换到alert
+    # driver.accept() #确定
+    # driver.dismiss() #取消
+    # driver.execute_script('一段js代码') #自定义弹窗, 可以将其dispaly设置为none
+    # driver.switch_to.iframe('frame_name') #替换到指定name的frame
 
     try:
         dr = WebDriverWait(driver, 5)
@@ -82,8 +82,8 @@ def test_selenium(url):
     actions.click(loadmore)
     actions.perform()
     '''        
-    #element.send_keys(Keys.RETURN)
-    #print(driver.current_url, driver.page_source)
+    # element.send_keys(Keys.RETURN)
+    # print(driver.current_url, driver.page_source)
     driver.quit()
 ```
 
