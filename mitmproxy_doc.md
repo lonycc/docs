@@ -1,10 +1,8 @@
 # mitmproxy
 
-安装方式：`pip install mitmproxy`
-
-功能说明：
-
 > 中间人攻击, 可用于代理抓包.
+
+安装方式：`pip install mitmproxy`
 
 使用方式:
 
