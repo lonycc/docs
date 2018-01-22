@@ -14,12 +14,12 @@ with Browser(driver_name='chrome', execute_path='/path/to/chromedriver', headles
   browser.visit('https://www.baidu.com')  #打开百度
   browser.fill('wd', 'splinter')  #查询构造?wd=splinter
   button = browser.find_by_id('su')  #<tag id="su">
-  // browser.find_by_text(u'查询')  #<tag>查询</tag>
-  // browser.find_by_name('btn').first   #<tag name="btn">
-  // browser.find_by_css('h1')
-  // browser.find_by_xpath('//h1')
-  // browser.find_by_tag('h1')  #<h1>xx</h1>
-  // browser.find_by_value('query')  #<tag value="query">
+  # browser.find_by_text(u'查询')  #<tag>查询</tag>
+  # browser.find_by_name('btn').first   #<tag name="btn">
+  # browser.find_by_css('h1')
+  # browser.find_by_xpath('//h1')
+  # browser.find_by_tag('h1')  #<h1>xx</h1>
+  # browser.find_by_value('query')  #<tag value="query">
   
   button.click()  #执行点击
   if browser.is_text_present('splinter.readthedocs.io'):  #搜索结果中是否存在<tag>splinter.readthedocs.io</tag>
