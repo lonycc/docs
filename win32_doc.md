@@ -29,7 +29,45 @@ win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP | win32con.MOUSEEVENTF_RIGHTDO
 win32api.keybd_event(13, 0, 0, 0) #发送回车
 # win32api.keybd_event(13, 0, win32con.KEYEVENTF_KEYUP, 0)
 
-win32gui.PostMessage(win32gui.findWindow(classname, titlename), win32con.WM_CLOSE, 0, 0) #关闭窗口
+win32gui.PostMessage(win32gui.FindWindow(classname, titlename), win32con.WM_CLOSE, 0, 0) #关闭窗口
+
+win32gui.ShowWindow(hld, win32con.SW_RESTORE) #恢复显示窗口句柄
+
+win32gui.SetForegroundWindow(hld) #将句柄hld置于当前活动窗口
+
+import ctypes
+from PIL import Image, ImageGrab
+
+class RECT(ctypes.Structure):
+    _fields_ = [('left', ctypes.c_long),
+            ('top', ctypes.c_long),
+            ('right', ctypes.c_long),
+            ('bottom', ctypes.c_long)]
+    def __str__(self):
+        return str((self.left, self.top, self.right, self.bottom))
+
+def analyze_current_screen_text(label, directory="."):
+    """当前窗口句柄截屏"""
+    hld = win32gui.FindWindow(None, label)
+    if hld > 0:
+        screenshot_filename = "screenshot.png"
+        save_text_area = os.path.join(directory, "text_area.png")
+        capture_screen(hld,screenshot_filename, directory)  #截屏
+    else:
+        print('咦，你没打开'+label+'吧!')
+
+
+def capture_screen(hld, filename="screenshot.png", directory="."):
+    win32gui.ShowWindow(hld, win32con.SW_RESTORE)
+    shell = win32com.client.Dispatch("WScript.Shell")
+    shell.SendKeys('%')
+    win32gui.SetForegroundWindow(hld)
+    time.sleep(1)
+    rect = RECT()
+    ctypes.windll.user32.GetWindowRect(hld, ctypes.byref(rect))
+    rangle = (rect.left,rect.top,rect.right,rect.bottom)
+    im = ImageGrab.grab(rangle)
+    im.save(os.path.join(directory, filename))
 ```
 
 参考资料:
@@ -39,3 +77,5 @@ win32gui.PostMessage(win32gui.findWindow(classname, titlename), win32con.WM_CLOS
 [win32api](https://www.programcreek.com/python/index/188/win32api)
 
 [win32con](https://www.programcreek.com/python/index/475/win32con)
+
+[win32com.client](https://www.programcreek.com/python/index/697/win32com.client)
