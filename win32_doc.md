@@ -22,8 +22,8 @@ hwnd1 = win32gui.FindWindowEx(hwnd, None, clsname, None)  #获取父句柄hwnd�
 
 win32api.SetCursorPos([30, 150]) #鼠标定位到(30, 50)
 
-
-win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP | win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0) #执行左键单击, 若需要双击则延时几毫秒再点击一次即可
+#执行左键单击, 若需要双击则延时几毫秒再点击一次即可
+win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP | win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
 win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP | win32con.MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0)
 
 win32api.keybd_event(13, 0, 0, 0) #发送回车
