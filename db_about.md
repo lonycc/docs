@@ -498,3 +498,71 @@ partitions 4;
 partition by linear key(id)
 partitions 3;
 ```
+
+## sqlserver命令
+
+`select * from sys.database;`  #查看所有数据库
+
+`select name from sysobjects where type='U';`  #查看用户创建的表
+
+`select name from syscolumns where id=object_id('TableName');`  #查看指定表的所有字段
+
+`select top 10 * from tableName;`
+
+`select datalength(fieldName) from tableName;`
+
+**存储过程及其调用方式, 定义一个递归获取所有层次子节点的存储过程**
+```
+set ANSI_NULLS ON
+set QUOTED_IDENTIFIER ON
+go
+
+ALTER PROC [dbo].[sp_getTreeById](@TreeId int)
+AS
+BEGIN
+    
+    WITH cteTree
+        AS (SELECT *
+              FROM sys_category
+              WHERE id = @TreeId  --第一个查询作为递归的基点(锚点)
+            UNION ALL
+            SELECT sys_category.*     --第二个查询作为递归成员， 下属成员的结果为空时，此递归结束。
+              FROM
+                   cteTree INNER JOIN sys_category ON cteTree.id = sys_category.parentid) 
+        SELECT *
+          FROM cteTree 
+END
+```
+
+`exec sp_getTreeById @TreeId=12`
+
+**sqlserver从文件恢复数据库**
+```
+restore database databaseName 
+from disk='E:/data/web.bak' 
+with move 'web_Data' to 'F:\data\web.mdf', 
+move 'web_Log' to 'F:\data\web_log.ldf', 
+stats=10, replace
+go
+```
+
+**pgsql导入导出**
+
+`pg_dump –hlocalhost –U postgres –p 5432 –d dbname –f "D:/test.dump"` #导出指定库
+
+`psql -h localhost -U postgres -d dbname -f "F:/hkm.dump"` #导入到指定库
+
+**oracle 语句块**
+```
+declare
+    cursor source_cursor is select * from cmsuser.sourcedic where groupid=25 and srcid=735;
+begin
+　　for rs in source_cursor
+　　loop
+        rs.srcid:=1010161;
+　　　　rs.groupid:=1;
+　　　　insert into cmsuser.sourcedic values rs;
+　　end loop;
+end;
+/
+```
