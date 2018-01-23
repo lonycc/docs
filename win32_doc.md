@@ -79,3 +79,5 @@ def capture_screen(hld, filename="screenshot.png", directory="."):
 [win32con](https://www.programcreek.com/python/index/475/win32con)
 
 [win32com.client](https://www.programcreek.com/python/index/697/win32com.client)
+
+[ctypes](https://www.programcreek.com/python/index/98/ctypes)
