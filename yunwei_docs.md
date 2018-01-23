@@ -801,3 +801,785 @@ iftop
 `ls -l | grep "^d" | wc –l`   #统计目录个数
 
 `ls -lR | grep "^-" | wc –l`  #统计所有文件个数，包括子目录
+
+
+## curl ssl connect error问题解决方案
+
+先去[官网](https://curl.haxx.se/download/archeology/)下载curl对应版本, 然后重新编译安装
+
+`./configure --prefix=/usr --without-nss --with-ssl`
+
+`make && make install`
+
+`ldconfig`
+
+`curl -V`
+
+重启nginx和php-fpm搞定.
+
+## 编译安装nginx
+
+`tar zxvf nginx-1.13.5.tar.gz`
+
+`cd nginx-1.13.5`
+
+`mkdir -p /usr/local/nginx/html`
+
+`groupadd www && useradd -g www -s /bin/false -d /usr/local/nginx/html www`
+
+`./configure --prefix=/usr/local/nginx --user=www --group=www --sbin-path=/usr/local/nginx/sbin/nginx --conf-path=/usr/local/nginx/conf/nginx.conf --pid-path=/usr/local/nginx/logs/nginx.pid --without-http_memcached_module --with-http_ssl_module --with-http_realip_module --with-http_addition_module --with-http_sub_module --with-http_dav_module --with-http_flv_module --with-http_mp4_module --with-http_gzip_static_module --with-http_random_index_module --with-http_secure_link_module --with-http_stub_status_module --with-http_auth_request_module --with-threads --with-stream --with-stream_ssl_module --with-http_slice_module --with-mail --with-mail_ssl_module --with-file-aio --with-http_v2_module --with-pcre=/usr/local/src/pcre-8.41 --with-zlib=/usr/local/src/zlib-1.2.11 --with-openssl=/usr/local/src/openssl-1.0.2l`
+
+`make && make install`
+
+<br/>
+
+## 升级Python版本
+
+`python -V` #查看当前版本
+
+`tar -xvf Python-2.7.10.tgz`
+
+`cd Python-2.7.10`
+
+`./configure --prefix=/usr/local/python2.7`
+
+`make && make install`
+
+`/usr/local/python2.7/bin/python2.7 -V`  #验证版本
+
+`ln -s  /usr/local/python2.7/bin/python2.7 /usr/bin/python27`  #创建文件软链
+
+`python27 -V`
+
+<br/>
+
+
+## 编译安装pcre
+
+`tar zxvf pcre-8.41.tar.gz`
+
+`cd pcre-8.41`
+
+`./configure --prefix=/usr/local/pcre-8.41 --libdir=/usr/local/lib/pcre --includedir=/usr/local/include/pcre`
+
+`make && make install`
+
+`mv /usr/bin/pcregrep /usr/bin/pcregrep.bak`
+
+`mv /usr/bin/pcretest /usr/bin/pcretest.bak`
+
+`ln -s /usr/local/pcre-8.41/bin/pcregrep /usr/bin/pcregrep` # 替换旧的pcregrep
+
+`ln -s /usr/local/pcre-8.41/bin/pcretest /usr/bin/pcretest` # 替换旧的pcretest
+
+`echo "/usr/local/lib/pcre" >> /etc/ld.so.conf`
+
+`ldconfig -v`  # 更新动态库数据
+
+`pcregrep -V`  #查看版本
+
+
+<br/>
+
+## jdk安装配置
+
+- 1、jdk的安装
+
+`rpm -ivh --prefix=/usr/local/   jdk-7u55-linux-i586.rpm`
+
+- 2、安装tomcat
+
+`tar zxvf apache-tomcat-7.0-53.tar.gz -C /usr/local/tomcat`
+
+- 3、配置环境变量
+- 
+```
+vi /etc/profile
+
+JAVA_HOME=/usr/local/jdk1.7.0_55
+CLASSPATH=.:$JAVA_HOME/lib/tools.jar
+TOMCAT_HOME=/usr/local/tomcat
+CATALINA_HOME=/usr/local/tomcat
+PATH=$JAVA_HOME/bin:$PATH
+export JAVA_HOME CLASSPATH TOMCAT_HOME CATALINA_HOME PATH
+
+source /etc/profile
+```
+
+<br/>
+
+## 编译安装perl
+
+`wget http://www.cpan.org/src/5.0/perl-5.24.1.tar.gz`
+
+`tar -xzf perl-5.24.1.tar.gz`
+
+`cd perl-5.24.1`
+
+`./Configure -des -Dprefix=$HOME/localperl`
+
+`make && make test && make install`
+
+- 替换系统自带版本
+
+`mv /usr/bin/perl /usr/bin/perl.bak`
+
+`ln -s /usr/local/perl/bin/perl /usr/bin/perl` 
+
+- 检查perl版本
+
+`perl -v`
+
+- 安装perl模块
+
+`perl -MCPAN -e shell` # 进入命令行模式
+
+`cpan[1]> install DBI`
+
+<br/>
+
+## 编译安装zlib
+
+`./configure --prefix=/usr/local/zlib`
+
+`make && make install`
+
+`cd /etc/ld.so.conf.d/`
+
+`vi zlib.conf` # 编辑配置文件
+
+`/usr/local/zlib/lib`  # 写入配置文件
+
+`ldconfig`  # 更新动态库数据
+
+<br/>
+
+### [Redis安装配置](http://www.redis.io/) 
+```
+wget http://download.redis.io/release/redis-2.8.3.tar.gz
+tar xzf redis-2.8.3.tar.gz
+cd redis-2.8.3
+make   #编译之后，在src目录下，将redis-server、redis-cli、redis-benchmark、redis.conf拷贝到同一目录下，例如/usr/redis
+redis-server redis.conf   #启动redis服务
+redis-server redis.conf 1>log.log 2>errlog.log  #1为标准输出，2为错误输出
+echo /usr/redis/redis-server /etc/rc.local  #随系统启动而启动服务
+redis-cli  #客户连接测试
+redis-cli shutdown  #停止服务
+```
+
+### phpredis key-value存储系统
+```
+tar zxvf phpredis-2.x.x.tar.gz
+cd phpredis-2.x.x.tar.gz
+cd phpredis-2.x.x.tar.gz
+/usr/local/php/bin/phpize
+./configure --with-php-config=/usr/local/php/bin/php-config
+make && make install
+echo "extension=\"redis.so\"" >> php.ini
+```
+
+### Samba 实现跨系统的网络资源共享
+```
+需要开放的端口 udp 137 udp 138 tcp 139 tcp 445
+vi /etc/samba/smb.conf
+workgroup = WORKGROUP #设定Samba Server所要加入的工作组或域
+server string = Samba Server  #设置samba服务器的主机名称
+security = user  #设置samba服务器的安全级别为user
+netbios name = SambaServer  #设置samba服务器访问别名
+interfaces = lo eth0 192.168.12.2/24  #samba服务器监听的网卡或ip地址
+hosts allow = 127. 192.168.1. 192.168.10.1 #允许的客户端
+hosts deny = 192.168.1.EXCEPT192.168.1.5 #除192.168.1.5全禁止
+[SambaServer]
+comment = SambaServer  #在Windows网上邻居看到的共享目录的名字
+path = /home/SambaServer  #共享目录在系统中的位置
+public = no    #不公开目录
+writable = yes   #共享目录可以读写
+valid users=sambaUser  #只允许sambaUser用户访问
+ 
+# 开启服务
+systemctl start nmb.service   #nmbd服务提供了NetBIOS主机名称的解析
+systemctl start smb.service   #smbd服务为客户机提供了服务器中共享资源的访问
+
+# 添加访问linux共享目录的帐号sambaUser
+useradd sambaUser -d /home/sambaUser -s /bin/false
+chown sambaUser:sambaUser /home/sambaUser -R
+
+# 将用户sambaUser添加入Samba用户数据库，并设置登录密码
+smbpasswd -a sambaUser
+
+于是可在Windows客户端输入 \\ip或者\\SambaServer登录访问共享目录
+```
+
+### Linux使用密钥认证登录SSH
+```
+1、linux下创建密钥对
+mkdir   /root/.ssh
+chmod 700 ~/.ssh
+ssh-keygen -t rsa -b 1024 #直接回车默认路径
+#输入密码短语并重复确认，也可以不输，这样登陆时就不用密码了
+cat id_rsa.pub authorized_keys  #把公钥输出到默认的认证文件中
+chmod 600 ~/.ssh/authorized_keys
+把私钥id_rsa的内容复制出来保存，然后重启sshd服务
+
+2、若用putty认证登录，则需要用puttygen来转换私钥格式，也就是用puttygen来加载id_rsa文件，转换之后，保存私钥。然后打开putty，在"连接" -> "SSH" -> "认证"，加载私钥文件。在"连接" -> "数据"，写入自动登录用户名。在"回话"填入主机名，然后点击打开即可实现密钥认证登录了。
+
+3、若用SecureCRT登录，则Quick Conncet -> 写入hostname，认证方式把Publickey作为首选并单独选中，点击Properties加载私钥文件确定 -> 输入用户名即可。 
+
+4、也可以Windows下putty创建密钥对。
+
+5、修改/etc/ssh/sshd_config
+
+PasswordAuthentication no   #禁止密码认证, 就只能用公钥私钥认证登录了
+#Port  22
+port 22661   #修改ssh默认端口
+PermitRootLogin no  #禁止root直接ssh登录
+
+6、重启sshd服务
+systectml restart sshd.service
+```
+
+### vi/vim几个常用命令
+```
+v #进入视图模式
+k/j  #向上/下选中
+
+一、删除
+dd   #删除当前行
+ndd  #删除当前行开始的n行
+dw   #删除当前字符
+ndw  #删除当前字符开始的n个字符
+d$ 或 D  #删除当前字符到行尾的字符
+d)   #删除到下一句的开始
+d}   #删除到下一段的开始
+d回车  #删除两行
+dG   #全部删除
+二、复制
+9, 15 copy 16  #复制9到15行到16行
+9, 15 move 16  #移动9到15行到16行
+ggyG  #全部复制
+ggvG  #全选高亮
+
+
+:set number  显示行号
+:n   跳转到第n行
+:wq   写入并退出
+:q  退出
+zz  保存并退出
+:q!  退出不保存
+dd 删除光标所在行
+:e 打开并编辑指定名称的文件
+a, A 在本行末尾之后开始插入
+i, I 在光标后插入
+O  在光标所在上方新建一行
+o  在光标所在下方新建一行
+Ctrl+f  屏幕前翻一页
+Ctrl+b 屏幕后返一页
+0 行首   $行尾
+n<space>  光标右移n字符
+n<Enter>  光标下移n行
+xX删除字符
+ndd删除光标以下n行
+U撤销前一步动作
+/pattern   查找并跳到匹配模式处，特殊字符要用”/”转义
+
+# 复制粘贴
+1、光标移到要复制的行首，yy复制单行，nyy向下复制n行；光标移到要粘贴的地方，p粘贴。
+2、光标移到要复制的行首，v进入视图，hjkl选择复制区，y复制，p粘贴。
+3、输入:n1,n2 co n3 表示将n1到n2行复制到n3行后面
+4、输入:n1 n2 m  n3 表示将n1到n2行剪切到n3行后面
+
+vi file1  #编辑file1
+:e file2  #编辑file2
+:e   #在两个文件之间切换
+vi filename  #打开或新建文件，并将光标置于第一行首 
+vi +n filename  #打开文件，并将光标置于第n行首 
+vi + filename  #打开文件，并将光标置于最后一行首 
+vi +/pattern filename  #打开文件，并将光标置于第一个与pattern匹配的串处 
+vi -r filename  #在上次正用vi编辑时发生系统崩溃，恢复filename 
+vi filename....filename #打开多个文件，依次进行编辑 
+```
+
+### grep的几个参数
+`grep -l 模式 file` #查找文件file中是否匹配模式，匹配则输出文件名
+
+`grep -l 模式 *`  #当前目录下所有文件
+
+`grep -L 模式 *`  #查找不匹配的
+
+`grep -c 模式 *`  #打印出匹配的行数
+
+`grep -i 模式 *`  #忽略大小写
+
+`grep -n 模式 *`  #显示匹配的行号
+
+`grep -q 模式 *`  #不输出匹配结果
+
+`grep -E 模式 *`  #正则和正则扩展
+
+`grep -r 模式 *`  #递归查找
+
+`grep -v 模式 *`  #输出不匹配的情况
+
+`grep -l '关键词1' /usr/local/xxx.py | xargs grep -qE '关键词2'` #文本中包含多个关键词
+
+`grep "xxx|aaa|bbb" *.txt`  #在当前目录下查找txt文件中含有xxx或aaa或bbb的文件
+
+### sed的几个参数
+```
+sed [ -nefr] [n1, n2] action
+
+-n  安静模式
+-e  直接在命令行模式上进行sed的操作
+-f  filename  将sed的操作写入文件
+-r  使sed支持扩展正则表达式
+n1, n2  选择要处理的行
+action支持的参数
+a  str 追加； c str 替换；  d  删除 '/regexp/d'
+i  str  插入； p 打印； s  搜索/替换
+
+cat -n /etc/passwd | sed '2,5d'  #显示除2到5行的passwd内容，
+cat -n /etc/passwd | sed '2a fuck'  #显示passwd内容，第2行后加fuck
+cat /etc/passwd | grep root | sed 's/^.* x//g'  #将开头到x的字符串替换为空
+sed 's/^ * //g' filename  #删除行首空格
+sed 's/pattern/& \n/g' filename  #行后添加新行，&代表pattern
+sed 's/pattern/ \n&/g' filename  #行前添加新行
+sed -e "s/$var1/Svar2/g" filename   #变量替换，双引号
+sed -i '1 i\insert' filename  #在第一行插入文本
+sed -i '$a\insert' filename  #在末行插入文本
+sed -i '/pattern/i "fuck"' filename  #在匹配行前插入字符串
+sed -i '/pattern/a "fuck"' filename #在匹配行后插入字符串
+grep -v ^# filename | sed '/^ * $/d' | sed '/^ $/d'  #删除注释号以及空格空行
+
+sed [-hnV] [-e <script>] [-f <script文件] [文本文件]
+
+sed -e "s/aaa/bbb/g *.txt   #当前目录下txt文本替换所有 
+
+sed -i "" "s/\/var\/web/\/home/g abc.txt   #-i表示插入
+
+sed -n "/192.168/p" `grep 192.169 -rl *.txt`  #-n表示quite，递归
+
+nl /etc/passwd #打印文件并带上行号
+```
+
+### ffmpeg
+> 高速音视频转换器，采集，视频抓图，视频编辑等；
+
+`ffmpeg -v 9 -loglevel 99 -headers "X-Forwarded-For: 160.53.186.194" -i http://pebbles112-lh.akamaihd.net/i/daserste_1@97481/index_900_av-p.m3u8?sd=6&b=0-1000&rebase=on` #指定headers
+
+`ffmpeg -i video.avi` #-i是输入参数，获取视频信息
+
+`ffmpeg -f image2 -i image%d.jpg video.mpg` #-f强制格式，将图片合成视频
+
+`ffmpeg -i abc.flv -b:v 640k abc.mp4` #转成码率为640kbps的mp4
+
+`ffmpeg -i abc.flv abc_%d.jpg` #将视频逐帧转为图片
+
+`ffmpeg -i abc.avi -vn -ar 44100 -ac 2 -ab 192 -f mp3 abc.mp3` #从视频中抽出声音，存为mp3
+
+### python安装pycurl模块
+```
+# 先下载安装curl
+http://curl.haxx.se/download/curl-x.y.z.tar.gz
+tar -zxvf curl-x.y.z.tar.gz
+cd curl-x.y.z
+./configure
+make && make install
+
+# 再下载安装pycurl
+http://pycurl.sourceforge.NET/download/pycurl-x.y.z.tar.gz
+tar -zxvf pycurl-x.y.z.tar.gz
+cd pycurl-x.y.z
+python setup.py install --curl-config=/usr/local/bin/curl-config
+```
+
+### 编译安装rarlinux,一定要找对版本
+```
+wget http://www.rarsoft.com/rar/rarlinux-x64-4.2.0.tar.gz 
+tar -zxvf rarlinux-4.0.1.tar.gz 
+cd rar 
+make 
+
+rar x xx.rar #解压xx.rar到当前目录
+rar xx.rar ./xxx/  #将当前目录下的xxx目录打包成xx.rar
+```
+
+### ntp编译安装
+```
+wget https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2/ntp-4.2.8p9.tar.gz
+tar zxvf ntp-4.2.8p9.tar.gz
+cd ntp-4.2.8p9
+./configure --prefix=/usr/local/ntp --enable-all-clocks --enable-parse-clocks
+make && make install
+
+1. 修改配置
+vi /etc/ntp.conf
+若要允许任何IP客户机都能进行时间同步
+restrict default nomodify
+若只允许指定IP端同步
+restrict default nomodify notrap noquery
+restrict 192.168.18.0 mask 255.255.255.0 nomodify
+
+2. 以守护进程启动ntpd
+/usr/local/ntp/bin/ntpd -c /etc/ntp.conf -p /tmp/ntpd.pid
+
+3.配置时间同步客户机
+crontab -e
+```
+
+### 时间同步相关 
+```
+date -s 11:20:35   修改系统时间
+date -s 11/09/13   修改系统日期
+date -s "2013-08-08 12:00:00"  修改时间和日期
+date -R   查看时区
+
+clock -w  把系统时间写入CMOS
+
+hwclock -w  把硬件时间写入CMOS
+hwclock -show 查看硬件时间，即RTC
+hwclock --hctosys  把硬件时间设为系统时间
+hwclock --systohc  把系统时间设为硬件时间
+hwclock --set --date=”mm/dd/yy hh:mm:ss” 设置硬件时间
+
+/etc/localtime  本地时间配置文件
+/etc/timezone   本地时区配置文件
+/usr/share/zoneinfo  时区信息目录
+
+ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
+
+ntp.fudan.edu.cn  复旦大学ntp服务器
+ntpdate 3.cn.pool.ntp.org  与网络时间服务器同步
+ntpq -p 检查时间同步情况
+
+
+crontab -e        添加crontab例行任务
+0 0 */7 * * ntpdate time.domain.com && /sbin/hwclock -w 每隔7天执行一次，要写入bios才有效
+```
+
+### hosts.allow/deny配置
+```
+1. /etc/hosts.allow
+sshd:192.168.1.0/255.255.255.0
+telnetd:LOCAL
+
+2. /etc/hosts.deny  #要和hosts.allow配合使用才生效
+sshd:ALL  
+telnetd:ALL
+然后执行  ldd /usr/sbin/sshd | grep libwrap.so
+
+3. /etc/ssh/sshd_config
+Port 5000 #修改端口为5000
+PermitRootLogin no  #禁止root登录
+PasswordAuthentication yes  #允许密码认证
+```
+
+### webbench网站压力测试工具
+```
+wget http://homw.tiscali.cz/cz210552/distfiles/webbench-1.5.tar.gz
+tar zxvf webbench-1.5.tar.gz
+cd webbench-1.5.tar.gz
+make
+mkdir /usr/local/man
+webbench -c 500 -t 30 http://127.0.0.1/   同时产生500个并发连接，持续30秒
+```
+
+
+### Nikto探测一个网站用到的技术
+```
+wget https://cirt.net/nikto/nikto-2.1.5.tar.gz
+tar -zxvf nikto-2.1.5.tar.gz
+cd nikto-2.1.5
+perl ./nikto.pl -h www.baidu.com  #探测指定主机
+perl ./nikto.pl -h 10.10.10.10 #扫描主机
+perl ./nikto.pl -h 10.10.10.10 -p 443 -s -g #扫描主机443端口，强制使用ssl模式
+perl ./nikto.pl -h 10.10.10.10 -p 80-90 #扫描80-90端口
+```
+
+## 安装配置Subversion
+```
+yum -y install subversion
+rpm -ql subversion  #查看安装位置
+svn  --help
+svnserve --version   #查看版本信息
+mkdir -p /opt/svn/svnrepos  #创建svn版本库目录
+svnadmin create /opt/svn/svnrepos  #创建版本库
+cd /opt/svn/svnrepos/conf   #进入conf目录
+# authz文件是权限控制文件
+# passwd是帐号密码文件
+# svnserve.conf是svn服务配置文件
+
+vi passwd   #设置帐号密码
+
+passwd
+[users]
+用户名 = 密码
+authz
+[路径]
+用户名=rw
+
+svnserve.conf
+[general]
+anon-access = read  #匿名用户可读(若版本比较时报错，就修改为none)
+auth-access = write  #授权用户可写
+password-db = passwd  #帐号文件
+authz-db = authz  #权限文件
+realm = /opt/svn/svnrepos  #认证空间名，版本库所在目录
+
+启动服务 svnserve -d -r /opt/svn/svnrepos [--listen-port 3690]
+
+lsof -i:3690  #查看端口
+
+连接方式： svn://ip:port
+
+killall -HUP svnserve  #杀死进程
+```
+
+## vsftp 安装配置
+```
+vsftpd.conf
+anonymous_enable=NO  #不允许匿名
+local_enable=YES  #允许本地访问
+write_enable=YES  #可写
+local_umask=022  #755权限
+file_open_mode=0755   
+dirmessage_enable=YES  #登录后的路径信息
+anon_upload_enable=NO   #匿名上传
+anon_mkdir_write_enable=NO  #匿名创建文件夹
+xferlog_enable=YES  #日志
+connect_from_port_20=YES
+xferlog_std_format=YES
+ascii_upload_enable=YES
+ascii_download_enable=YES
+chroot_local_user=YES
+chroot_list_enable=NO
+chroot_list_file=/etc/vsftpd/chroot_list  #该文件默认是不存在的，需手动创建
+listen=YES
+pam_service_name=vsftpd
+userlist_enable=YES  #启用user_list文件
+userlist_deny=NO    #user_list文件中的用户可登录
+tcp_wrappers=YES
+isolate_network=NO
+pasv_enable=YES
+
+# vi /etc/vsftpd/user_list    #该文件里写用户名，一行一个
+ftptest
+
+useradd -d /opt/www -s /sbin/nologin -g ftp ftptest  #创建普通ftp用户
+passwd ftptest   #设置密码
+
+注意：若无法获取目录列表，检查selinux是否禁止，iptables是否开启端口。
+
+# 开启iptables之后ftp无法显示目录列表
+vi /etc/sysconfig/iptables-config  添加
+IPTABLES_MODULES="ip_conntrack_ftp"
+IPTABLES_MODULES="ip_nat_ftp"
+# 或者临时加载模块
+modprobe ip_conntrack_ftp
+modprobe ip_nat_ftp
+```
+
+## 升级[openssh](ftp://mirror.internode.on.net/pub/OpenBSD/OpenSSH/portable/)到7.6p1 (2017-10-11 )
+
+- 下载最新版本并解压编译安装
+
+`tar zxvf openssh-7.6p1.tar.gz`
+
+`cd openssh-7.6p1`
+
+`./configure --prefix=/usr/local/openssh-7.6p1 --with-pam=enable --with-ssl-dir=/usr/local/ssl`
+
+> 注意：若报错 pam header not found, 则需要yum -y install pam-devel; 若报错zlib missing, 则需要yum -y install zlib-devel
+
+`make && make install`
+
+- 先停掉sshd服务(centos6下 service sshd stop, centos7下 systemctl stop sshd.service)
+
+`/usr/local/openssh-7.6p1/bin/*` 覆盖 `/usr/bin/` 目录下的同名文件, 注意覆盖前先备份
+
+`/usr/local/openssh-7.6p1/sbin/*` 覆盖 `/usr/sbin/` 目录下同名文件, 注意覆盖前先备份
+
+备份`/etc/init.d/sshd`, 用当前目录下的`opensshd.init`覆盖 `/etc/init.d/sshd` (centos7系统忽略)
+
+如果某个文件无法覆盖, 则先删除再覆盖(别怕, 你都备份了还怕什么)
+
+- 启动sshd服务
+
+`service start sshd` 或 `systemctl start sshd.service`
+
+`ssh -V`
+
+> 注：openssh依赖于openssl, 先把openssl升级到最新版本, 再升级openssh.
+
+<br/>
+
+## 升级[openssl](https://www.openssl.org/source/)到1.0.2l (2017-10-11)
+
+- 下载最新版本并解压安装
+
+`tar zxvf openssl-1.0.2l.tar.gz`
+
+`cd openssl-1.0.2l`
+
+`./config shared`  #可以指定安装路径`--prefix=/usr/local/openssl-1.0.2l`, 不指定则默认安装在`/usr/local/ssl`
+
+`make`
+
+`make test`
+
+`make install`
+
+- 替换旧版本
+
+`mv /usr/bin/openssl /usr/bin/openssl.bak`
+
+`mv /usr/include/openssl /usr/include/openssl.bak`
+
+`ln -s /usr/local/ssl/bin/openssl /usr/bin/openssl`
+
+`ln -s /usr/local/ssl/include/openssl /usr/include/openssl`
+
+`echo "/usr/local/ssl/lib" >> /etc/ld.so.conf`
+
+`ldconfig`
+
+- 验证新版本
+
+`openssl version`
+
+
+## jar打包的一些命令
+
+```
+1.jar打包命令
+
+jar -cvf xx.jar *.* 
+
+说明一下：*.*表示把当前目录下面以及子目录的所有class都打到这个xx.jar里。
+
+-cvf的含义，可以自己去用jar命令去查看
+
+如果要单独对某个或某些class文件进行打包，可以这样：
+
+jar -cvf xx.jar Foo.class Bar.class 
+
+
+2.运行jar
+
+java -jar xx.jar
+
+要运行一个jar，则此jar内部的META-INF\MANIFEST.MF文件里必须指明要执行的main方法类
+
+具体格式如：
+
+Manifest-Version: 1.0
+Created-By: 1.6.0_03 (Sun Microsystems Inc.)
+Main-class: Test 
+
+如果此处的Test.class在com.xx包下面，则需要指明。
+
+如果在运行时报了invalid or corrupt jarfile错误，则需要检查Main-class: Test 之间是不是缺少了空格。
+
+
+3.指定运行jar里面的class
+java -cp xx.jar com.xx.Test
+
+4.编译某个java文件，但是依赖某个jar
+
+javac -cp xx.jar Test.java
+
+ (Test.java里面import了xx.jar里面的某个class)
+
+
+5.运行某个java文件，但是依赖某个jar
+java -cp .;xx.jar Test
+
+注意：引用xx.jar的时候，不要漏掉.;（这个表示当前目录）
+
+举例：
+
+test.java 引用了第三方包，如果要在cmd下执行test.java
+
+javac -cp .;mysql-connector-java.jar test.java  #编译
+
+java -cp .;mysql-connector-java.jar test   #执行
+```
+
+### nfs相关
+
+```
+一. 服务端10.1.10.1
+
+yum install -y nfs-utils
+
+vim /etc/exports
+/home/nfs 10.1.10.10(rw,sync,no_root_squash)  10.1.10.11(ro,async,no_root_squash,fsid=0) #fsid表示将/home/nfs作为根目录
+/home/nfs1 10.1.10.0/24(rw,sync,all_squash,anonuid=0,anongid=0)  #id root可查看到root用户的id
+# 配置立即生效
+exportfs –arv
+# 允许服务
+systemctl enable rpcbind.service    
+systemctl enable nfs-server.service
+# 启动服务
+systemctl start rpcbind.service    
+systemctl start nfs-server.service 
+
+# 确认服务
+rpcinfo -p
+showmount -e 10.1.10.1
+
+# 防火墙端口相关
+iptables -I INPUT -p tcp -m multiport --dports 111,892,2049 -j ACCEPT
+iptables -I INPUT -p udp -m multiport --dports 111,892 -j ACCEPT
+
+二. 客户端10.1.10.10/11
+
+yum install -y nfs-utils
+
+# 启动rpcbind服务
+systemctl enable rpcbind.service
+systemctl start rpcbind.service
+
+# 检查 NFS 服务器端是否有目录共享
+showmount -e 10.1.10.1
+
+# 挂载nfs
+mount -t nfs 10.1.10.1:/home/nfs/ /home/nfs/
+
+# 开机挂载
+vim /etc/fstab
+10.1.10.1:/home/nfs /home/nfs nfs nolock 0 0
+10.1.10.1:/home/nfs1 /home/nfs1 nfs nolock 0 0
+
+# 重新挂载
+mount -a
+```
+
+
+# 先安装Python3.6的依赖
+
+`yum install -y gcc zlib-devel openssl-devel bzip2-devel expat-devel gdbm-devel readline-devel sqlite-devel ncurses-devel make autoconf automake`
+
+# 下载源码包
+
+`wget https://www.python.org/ftp/python/3.6.2/Python-3.6.2.tgz`
+
+# 解压编译安装
+
+`tar zxvf Python-3.6.2.tgz`
+
+`cd Python-3.6.2`
+
+`./configure --prefix=/usr/local/python36`
+
+`make -j 4`
+
+`make install`
+
+# 一般而言, python3.6相关命令会在/usr/local/bin目录下有软链
+
+# 对于CentOS7自带的Python2.7.x, 没有pip
+
+`yum install -y epel-release`
+
+`yum install python-pip`
