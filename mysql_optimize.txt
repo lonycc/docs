@@ -1,0 +1,345 @@
+1、MySQL配置问题
+/var/share/mysql/my-xxx.cnf
+my-medium.cnf  对应系统内存在32-64M
+my-large.cnf  对应系统内存在512M左右
+my-huge.cnf  对应系统内存在1G-2G
+my-innodb-heavy-4G.cnf  对应系统内存4G或以上，大部分表引擎为innodb
+ 
+key_buffer_size = 256M   #用于索引的缓冲区大小，对于内存在4G左右的服务器，设为256M或384M。
+mysql> set global key_buffer_size=204800;  #全局索引缓存设为200M
+mysql> set @@global.hot_cache.key_buffer_size=102400;   #全局热索引缓存设为100M
+mysql> set @@global.cold_cache.key_buffer_size=102400;  #全局冷索引缓存设为100M
+mysql> cache index test1 in hot_cache;      #指定不同的索引使用不同的键缓存
+mysql> cache index test2 in cold_cache;
+mysql> load index into cache test1,test2 ignore leaves;  #将索引预加载到缓存区中
+ 
+ 
+table_open_cache =1024  #mysql打开表，会读取一些数据到table_open_cache缓存中，当mysql在缓存中找不到相应信息时，才会去磁盘上直接读取。
+mysql> show variables like ‘table%’;  #查看数据表相关参数
+mysql> show status like ‘open%’;     #查看数据表打开状况
+mysql> show status like ‘thread%’;    #查看当前线程状况
+ 
+query_cache_size = 64M     #设置查询缓冲区大小
+mysql> show variables like ‘query%’;  #查看查询相关参数值
+mysql> show status like ‘Qcache%;    #查看查询缓冲相关状况
+如果Qcache_lowmem_prunes值很大，表明经常出现缓冲不够的情况；如果Qcache_hits值很大，表明查询缓冲使用频繁，如果该值很小，反而影响查询效率，那么可以不使用查询缓冲。如果Qcache_free_blocks值很大，表明缓冲区碎片很多。
+ 
+ 
+net start|stop|restart mysql    #Windows下启动|停止|重启mysql服务
+mysqldump -uroot -p shutdown  #关闭mysql
+mysql> source /data/cacti.sql;  #导入数据库
+mysqldump -uroot -p test > test.sql;  #导出数据库文件，用于备份
+mysql -uroot -p test < test.sql;  #导入数据库文件
+
+导出单个数据表结构和数据 
+mysqldump -h localhost -uroot -p123456  database table > dump.sql 
+导出整个数据库结构（不包含数据） 
+/usr/local/mysql/bin/mysqldump -uroot -d entrym> dump.sql 
+导出单个数据表结构（不包含数据） 
+mysqldump -h localhost -uroot -p123456  -d database table > dump.sql
+
+# 开启慢查询日志
+show variables like 'slow_query%';
+show variables like 'long_query_time';
+
+set global slow_query_log='ON';
+set global slow_query_log_file='/usr/local/mysql/data/slow.log';
+set global long_query_time=1;
+
+
+或者修改my.cnf
+[mysqld]
+slow_query_log = ON
+slow_query_log_file = /usr/local/mysql/data/slow.log
+long_query_time = 1
+
+
+ 
+修改字符集
+mysql> show variables like ‘char%’;
+mysql> set character_set_client=gbk;
+ 
+SQL优化
+analyze local | no_write_to_binlog table tb_name;分析表
+explain select... \G;  分析查询性能
+show session | global status like 'com%'; 显示命令统计参数
+show processlist;显示进程列表
+optimize local | no_write_to_binlog_ table table tb_name;优化表
+check table tb_name quick | fast | medium;检查表
+ 
+mysql出现问题时
+先配置my.ini
+进入/mysql/bin
+mysqld.exe -install
+net start mysql
+mysql -u root -h localhost -p
+set password=password(' ');   //设置密码
+update mysql.user set password=' ' where user='root';
+flush privileges;
+创建管理员密码
+
+mysqladmin -u root password "xxx"
+忘记管理员密码
+service mysqld stop
+mysqld_safe --user=root --skip-grant-tables
+刷新数据库和表
+./mysqladmin -uroot -p flush-tables
+
+
+ 
+数据库的备份
+mysqldump [options] db_name[table_name] 备份单个数据库
+mysqldump [options] --database db_name1 [db_name2]...  备份多个数据库
+-u  指定用户名
+-p  指定密码
+-h  指定主机名
+-P  指定端口
+输出内容选项
+--add-drop-database  每个数据库创建语句之前加上drop database语句
+--add-drop-table 每个表创建语句之前加上drop table语句
+-n  不包含数据库创建语句
+-t   不包含数据表创建语句
+-d  不包含数据
+mysqldump -u root -p --all-database > all.sql 备份全部数据库
+mysqldump -u root -p db_name [t1] [t2] > test.sql 备份指定数据库中的指定表
+ 
+数据库的恢复
+mysql -u root -p db_name < test.sql
+日志恢复
+mysqlbinlog mysql-bin.000011 | mysql -uroot -p test
+基于时间点恢复
+mysqlbinlog --stop-date="2013-08-29 10:34:23" /var/log/mysql/bin.123456 | mysql -u root -pmypwd
+跳过故障点
+mysqlbinlog --start-date="2013-08-29 11:20:01" /var/log/mysql/bin.123456 | mysql -u root -pmypwd \
+ 
+热备份
+myisam存储引擎
+mysqlhotcopy工具
+mysqlhotcopy db_name [/path/to/new_directory]
+手工锁表
+flush table for read;
+cp db_name [/path/to/new_directory]
+ 
+innodb引擎
+使用ibbackup工具
+ 
+表的导入导出
+1、select...into  outfile...
+select * from tb_name into outfile 'target_file' [option];
+option参数
+fields terminated by 'string'    字段分隔符，默认为'\t'
+fields [optionally] enclosed by 'char' 字段引用符，默认不使用
+fields escaped by 'char'  转义字符，默认为'\'
+lines starting by 'string'  每行前都加此字符，默认' '
+lines terminated by 'string' 行结束符，默认'\n'
+当导出命令中含字段引用符时，数据中含有转义符本身和字段引用符的字符需要被转义；
+当导出命令中不含字段引用符时，数据中含有转义字符本身和字段分隔符的字符需要被转义。
+ 
+用mysqldump导出数据为文本
+mysql -u root -T target_dir dbname tb_name [option]
+参数
+--field-terminated-by=name
+--field-escaped-by=name
+ 
+导入
+load data [local] infile 'filename' into table tb_name [option]
+option选项
+fields terminated by 'string'
+fields [optionally] enclosed by 'char'
+fields escaped by 'char'
+lines terminated by 'string'
+ignore number lines  忽略输入文本前n行
+col_name_or_user_name 按照列出的字段顺序和字段数量加载数据
+set col_name=expr  将列做一定的数值转换后再加载
+ 
+mysqlimport -u root -p [--local] db_name order_tab.txt [option]
+选项同mysqldump
+
+压缩工具myisampack [options] filename
+日志管理工具mysqlbinlog [options] log-file1, log-file2....
+ 
+myisam表维护工具
+mysqlcheck [options] db_name [tables]
+mysqlcheck [options] --database db1 [db2 db3...]
+mysqlcheck [options] --all-database
+option选项
+-c  检查
+-r  修复
+-a  分析
+-o  优化
+ 
+ 
+MySQL日志
+mysqlbinlog log-file;  读取二进制日志
+mysql >show master status;  查看当前日志
+mysql >show master logs;   查看全部日志列表
+ 
+system ls -ltr mysql-bin*;  查看所有日志
+mysql >reset master;  删除所有日志
+mysql >purge master logs to 'mysql-bin.000005'; 删除编号在000005之前的所有日志
+mysql >purge master logs before ‘yyyy-mm-dd hh:mm:ss’;  删除在某个日期时间点之前的所有日志
+ 
+在/etc/my.cnf的[mysqld]中添加expire_logs_day=3
+ 
+
+对于新导入的数据表（冷备份），必须刷新数据表才能获得权限。
+./mysqladmin -u root -p flush-tables
+ 
+ 
+查看所有数据库的大小：
+use information_schema;
+select concat(round(sum(data_length/1024/1024),2),'MB') as data from tables;
+ 
+查询数据库test的大小：
+select concat(round(sum(data_length/1024/1024),2),'MB') as data from tables where table_schema='test';
+ 
+查询某个数据库指定表的大小：
+select concat(round(sum(data_length/1024/1024),2),'MB') as data from tables where table_schema='test' and table_name='f1';
+ 
+ 
+[mysqld]
+log-error = /var/lib/mysql/xxx.err   #如果不配置，则默认为(主机名.err)
+log = /var/lib/mysql/query_log.log   #配置查询日志路径，默认是没有的
+log-slow-queries = /var/lib/mysql/slow.log  #慢查询日志，执行时间超过long-query-time设定值的sql语句日志
+ 
+ 
+视图
+create|replace|alter [algorithm=undefied|merge|temptable] view view_name [col_name] as select_statement [with [cascaded|local] check option];  #创建/替换/修改视图
+drop view view_name;  #删除视图
+ 
+ 
+select date_format(now(),’%Y%m%d%H%i%s’);
+select date_add(now(), interval -5 year);
+select date_sub(now(), interval 2 second);
+weekofyear();
+dayofyear();
+ 
+php 
+$a = ‘20131215’;
+date(‘Y-m-d H:i:s’,$a); //将数字格式转为unix时间,得到1970-08-22 00:00:15
+strtotime(‘$a’);  //将任何文本日期解析为unix时间戳，得到1387065600
+
+
+MySQL too many connections 解决办法
+mysql> show processlist;
+mysql> kill id;
+max_used_connections/max_connections≈85%，低于10%则需要设低max_connections.
+/etc/my.cnf
+max_conncetions=200
+wait_timeout=5
+ 
+mysql> show global status;  //全部状态值
+mysql> show variables like ‘%slow%’;  //慢查询
+mysql> show global status like ‘%slow%’; 
+mysql> show variables like ‘%connections’;
+
+
+索引
+索引是对数据表中的一列或多列的值进行排序的一种结构，使用索引可以提高数据库中特定数据的查询速度。
+索引是一个单独的、存储在磁盘上的数据库结构，它们包含着对数据表中所有记录的引用指针。
+mysql中索引的存储类型有两种：BTREE和HASH，具体和表的存储引擎有关。MyISAM和InnoDB存储引擎只支持BTREE索引。
+单列索引和组合索引
+组合索引必须引用索引列中最左边的字段，索引才生效。
+全文索引FULLTEXT
+在定义索引的列上支持全文查找，允许这些索引列中插入重复值和空值。可以在char、varchar、text类型的列上创建，mysql中只有MyISAM存储引擎支持全文索引。
+索引设计原则
+不是越多越好，因为占用额外存储空间，也会影响insert/delete/update等语句性能。
+当唯一性是某种数据本身的特性时，指定唯一索引。
+在频繁进行排序（order by）或分组（group by）的列上建立索引，如果有多个列要排序，建立组合索引。
+
+
+​
+创建索引 (index与key同义)（asc|desc升序或降序存储索引值）
+alter table table_name add index|key index_name(col_list asc|desc);   //普通索引，允许重复和空值
+alter table table_name add unique(col_list);  //唯一索引，不允许重复，允许空值
+alter table table_name add fulltext(col_list);  //全文索引
+alter table table_name add primary key(col_list);  //主键索引，不允许重复，不允许空值
+create index index_name on table_name(col_list);
+create unique index index_name on table_name(col_list);
+create fulltext index index_name on table_name(col_list);
+删除索引
+drop index index_name on table_name;
+alter table table_name drop index index_name;
+alter table table_name drop primary key;
+查看索引
+show index from table_name;
+show keys from table_name;
+
+优化与索引
+1、数据类型越小通常越好，越小的数据类型在磁盘、内存、cpu缓存中都需要更少空间，处理起来更快。
+2、简单的数据类型更好。整型比字符型，处理开销更小。用内置日期和时间数据类型存储时间，用整型存储IP地址。(PHP里面有ip2long和long2ip方法, 需要使用sprintf('%u', ip2long(''));来格式化, 否则会出现负数)
+ip2long原型：
+function ip2long($ip_string){
+    $ip_array = explode('.', $ip_string);
+    return (sprintf('%u', ($ip_array[0] << 24 | $ip_array[1] << 16 | $ip_array[2] << 8 |  $ip_array[3] ));
+}
+3、尽量避免NULL, 应该指定列为not null, 除非你想存储null. 含有null的列很难进行查询优化, 因为它们使得索引、索引的统计信息以及比较运算更复杂, 可以用0或特殊值或一个空串来代替空值。
+
+对于组合索引 index(c1,c2), mysql仅对索引最左边的前缀进行有效查找, 也就是说查询条件里必须存在c1才能够使用该索引.
+
+
+#增量备份数据库
+
+mysqlbinlog --no-defaults mysql-binlog.000001 > /home/001.sql
+
+#恢复数据库
+
+gzip < $out_sql | mysql -u$db_user -p$db_pass $db_name
+
+
+mysql  外键约束
+alter table tb_2 add constraint fk_name foreign key (index_col_name) references tb_1(index_col_name) on delete restrict on update cascade;
+alter table tb_2  drop foreign key fk_name;  //删除外键
+
+查询缓存
+show variables like '%query_cache%';
+show status like '%qcache%';
+
+
+自定义变量
+set @var1 = expr [,@var2 = expr2] ...  #变量可设为整数、实数、字符串或NULL
+select @var1;  #查询或设置变量
+select @var1:=(@var2:=1)+expr;  #查询赋值
+
+表关联
+create table city(
+city_id smallint(4) unsigned not null auto_increment,
+city varchar(50) not null,
+country_id smallint(3) unsigned not null,
+last_update timestamp not null default current_timestamp on update current_timestamp,
+primary key(city_id),
+key idx_fx_country_id(country_id),
+constraint fk_country_city foreign key (country_id) references country (country_id) on update cascade
+) engine = innodb default charset=utf8;
+
+create table country(
+country_id smallint(4) unsigned not null auto_increment,
+country varchar(50) not null,
+last_update timestamp not null default current_timestamp on update current_timestamp,
+primary key(country_id)
+) engine = innodb default charset=utf8;
+
+union  联合查询
+把两次或多次查询结果合并，要求查询的列数一致，对应的列类型一致，列名可以不一致，取第一次的列名。会自动去重。若不想去重，则用union all。
+select field from tab_1 union [all] select field  from tab_2;
+
+left join  左连接
+以左表为准，去右表找数据，如果没有匹配的数据，则以null补空位，所以输出结果数>=左表原数据数
+select n1,n2,n3 from tab_1 left join tab_2 on tab_1.n1 = tab_2.n2;
+
+right join  右连接
+tab_1 left join tab_2 <=> tab_2 right join tab_1
+推荐使用左连接代替右连接
+
+inner join  内连接
+内连接是左右连接的交集，即左右连接结果去处null项后的并集。
+
+
+eg:删掉重复记录，保留Id最小的
+DELETE FROM p1 USING Person p1 INNER JOIN Person p2 WHERE p1.Email = p2.Email AND p1.Id > p2.Id;
+DELETE FROM Person WHERE ID NOT IN (SELECT * FROM (SELECT MIN(Id) FROM Person p GROUP BY Email) t);
+
+
+eg:成绩排名的，分数相同的并列排名，并且排名之间不跳跃
+SELECT Score, Rank FROM( SELECT Score, @curRank := @curRank + IF(@prevScore = Score, 0, 1) AS Rank, @prevScore := Score FROM Scores s, (SELECT @curRank := 0) r, (SELECT @prevScore := NULL) p ORDER BY Score DESC ) t;
+SELECT Scores.Score, COUNT(Ranking.Score) AS RANK FROM Scores , ( SELECT DISTINCT Score FROM Scores ) Ranking WHERE Scores.Score <= Ranking.Score GROUP BY Scores.Id, Scores.Score ORDER BY Scores.Score DESC;
