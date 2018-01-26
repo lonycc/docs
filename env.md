@@ -11,7 +11,8 @@ pgsql_home: D:\PostgresQL
 php_home: D:\php56
 python_home: D:\Python35
 go_home: D:\go
-GOPATH: F:\myjob\go
+GOPATH: D:\go\gopath
+GOROOT: D:\go
 
 path:
 %android_home%;%android_home%\tools;%android_home%\build-tools;%android_home%\platform-tools;%java_home%\bin;%jre_home%\bin;%maven_home%\bin;%mongo_home%\bin;%mysql_home%\bin;%node_home%;%node_home%\node_global;%php_home%;%pgsql_home%\bin;%python_home%;%python_home%\Scripts;
