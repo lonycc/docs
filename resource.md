@@ -252,7 +252,7 @@
 
 [protobuffer docs](http://gashero.yeax.com/?p=108)
 
-[ssllabs](https://www.ssllabs.com/ssltest/analyze.html?d=api.southcn.com&hideResults=on)
+[ssllabs](https://www.ssllabs.com/ssltest/analyze.html?d=jandan.net&hideResults=on)
 
 [chromefor](https://www.chromefor.com/)
 
