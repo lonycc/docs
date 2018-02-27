@@ -139,7 +139,47 @@ set session group_concat_max_len=99999;
 
 `alter table table_name add primary key (col_name);` #主键索引
 
-`alter table table_name add index index_name (col_1,col_2,...);` # 创建多列索引
+`alter table table_name add index index_name (col_1,col_2,...);` #创建多列索引
+
+**全文索引**
+```
+可以在建表语句中 fulltext(title,content) 
+或者
+alter table tbname add fulltext index ft_name(title,content);
+或者
+create fulltext index ft_name on tbname(name);
+或者指定索引长度
+create fulltext index ft_name on tbname(name(20));
+
+删除索引
+drop index ft_name on tbname;
+或者
+alter table tbname drop index ft_name;
+
+使用全文索引, 使用in boolean mode可以避开50%限制
+select * from tbname where match(col_1, col_2) against('string' in boolean mode);
+
+查看全文索引相关变量
+show variables like 'ft%';
+ft_boolean_syntax  #改变in boolean mode的查询字符 + -><()~*:""&|
+ft_min_word_len #最短索引字符串, 默认4
+ft_max_word_len #最长索引字符串, 默认84
+ft_query_expansion_limit
+ft_stopword_file  #停用词表
+
+ft_boolean_syntax使用举例
+'-apple +banana'
+'apple banana' #至少包含一个
+'+apple +juice' #同时包含
+'+apple juice' #包含apple, 若包含juice则权重更高
+'+apple -juice' #包含apple, 不包含juice
+'apple >juice' #提高包含juice的权重
+'apple >juice >banana <orange' #><都能提升权重,>比<优先, 同一类的前面的在前
+'+aaa +(>bbb >ccc)'  #aaa & bbb > aaa & bbb & ccc > aaa & ccc
+'+apple ~banana' #先匹配apple, 若同时包含banana, 则排名靠后
+'+apple*' #*只能在字符串后面, 通配符
+"aaa bbb" #整体匹配, 可匹配 aaa bbb xxx, 但不能匹配aaa is bbb
+```
 
 ## myisam 和 innodb 引擎的区别
 
