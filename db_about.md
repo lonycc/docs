@@ -156,7 +156,7 @@ drop index ft_name on tbname;
 或者
 alter table tbname drop index ft_name;
 
-使用全文索引, 使用in boolean mode可以避开50%限制
+使用全文索引, 使用in boolean mode可以避开50%限制; 也可选in natural language mode
 select * from tbname where match(col_1, col_2) against('string' in boolean mode);
 
 查看全文索引相关变量
@@ -179,6 +179,16 @@ ft_boolean_syntax使用举例
 '+apple ~banana' #先匹配apple, 若同时包含banana, 则排名靠后
 '+apple*' #*只能在字符串后面, 通配符
 "aaa bbb" #整体匹配, 可匹配 aaa bbb xxx, 但不能匹配aaa is bbb
+
+从mysql5.7开始, 内置了ngram全文检索插件, 用于支持中文分词, 并对myisam和innodb引擎有效
+配置文件中
+[mysqld]
+ngram_token_size=2
+
+添加全文索引
+alter table tbname add fulltext index ft_name(col_1,col_2) with parser ngram;
+或在建表时
+fulltext(col_1,col_2) with parser ngram
 ```
 
 ## myisam 和 innodb 引擎的区别
