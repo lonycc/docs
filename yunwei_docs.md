@@ -1583,3 +1583,21 @@ mount -a
 `yum install -y epel-release`
 
 `yum install python-pip`
+
+**linux下查看进程打开的文件句柄数**
+
+`lsof -n | awk '{print $2}' | sort | uniq -c | sort -nr` #按进程统计, 第一列是句柄数, 第二列进程id
+
+`lsof -n | awk '{print $5}' | sort | uniq -c | sort -nr` #按句柄类型统计, 其中REG代表文件
+
+`lsof | wc -l` #查看总文件句柄数
+
+`lsof -p pid | wc -l` #指定进程打开的文件句柄数
+
+`lsof | grep IPv4 | wc -l` #查看网络句柄数
+
+`lsof | grep TCP | wc -l`
+
+`ulimit -n` #系统默认最大句柄数
+
+`ulimit -HSn 4096` #修改最大句柄数, H指定了硬性大小, S指定了软性大小, n指定了单个进程最大的打开文件句柄数
