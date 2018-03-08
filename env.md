@@ -368,3 +368,10 @@ export PATH=$PATH:$GOBIN
 `shift + command + 4` # 截图
 
 `sudo scutil --set HostName work` # 设置hostname
+
+**jupyter notebook配置**
+
+`jupyter notebook --generate-config` 将会生成配置文件 `~/.jupyter/jupyter_notebook_config.py`, 
+修改第214行`c.NotebookApp.notebook_dir = 'F:\\myjob\\python'`, 
+
+如果要修改字体, 找到安装目录下的 `/lib/site-packages/notebook/static/custom/custom.css` 修改样式即可.
