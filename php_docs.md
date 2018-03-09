@@ -269,3 +269,28 @@ export ORACLE_HOME LD_LIBRARY_PATH NLS_LANG
 
 
 ## [php-fpm配置与优化](https://www.zybuluo.com/phper/note/89081)
+
+**安装ldap模块**
+```
+yum install openldap
+yum install openldap-devel
+
+# 进入php源码目录
+cd php-7.1.1/ext/ldap
+
+# 运行phpize
+/usr/local/php/bin/phpize
+
+# 编译安装
+./configure --with-ldap --with-php-config=/usr/local/php/bin/php-config
+make
+make install
+ls -l /usr/local/php/lib/php/extensions/no-debug-non-zts-xxx
+
+# php.ini配置文件增加ldap模块
+vi /usr/local/php/etc/php.ini
+extension="ldap.so"
+
+# 重启php-fpm
+service php-fpm restart
+```
