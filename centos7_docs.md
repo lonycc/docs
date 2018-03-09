@@ -383,3 +383,27 @@ gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
 执行安装 `yum -y install mongodb-org`
 
 验证安装 `rpm -qa | grep mongo` 和 `rpm -ql mongodb-org-server`
+
+**mariadb主从配置**
+
+`yum install -y mariadb mariadb-server`
+
+`systemctl enable mariadb`
+
+`systemctl start mariadb`
+
+`mysql_secure_installation`
+
+`stop slave;`
+
+`change master to master_host='173.184.156.111',master_port=3306,master_user='aaa',master_password='bbb',master_log_file='demo-bin.000030', master_log_pos=17106372;`
+
+`show variables like 'server_id';`
+
+`set global server_id=5;` #递增
+
+`start slave;`
+
+`show slave status\G`
+
+> 注：如果重启mariadb会导致server_id丢失, 那么就在`/etc/my.cnf`配置`server_id = 5`
