@@ -1601,3 +1601,7 @@ mount -a
 `ulimit -n` #系统默认最大句柄数
 
 `ulimit -HSn 4096` #修改最大句柄数, H指定了硬性大小, S指定了软性大小, n指定了单个进程最大的打开文件句柄数
+
+**忘记了mariadb的root密码**
+
+> 先停止服务`systemctl stop mariadb`, 找到配置文件`/etc/my.cnf`, 在`[mysqld]`段添加`skip-grant-tables`, 启动服务, 进入命令行更新密码即可.
