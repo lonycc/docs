@@ -251,7 +251,7 @@ python setup.py sdist upload
 
 **安装服务**
 
-`brew install mongodb/redis/nginx/mysql/php/python/python3/go/rabbitmq`
+`brew install postgresql/mongodb/redis/nginx/mysql/php/python/python3/go/rabbitmq`
 
 [mac下nmp环境搭建](https://blog.frd.mn/install-nginx-php-fpm-mysql-and-phpmyadmin-on-os-x-mavericks-using-homebrew/)
 
@@ -307,6 +307,10 @@ alias nginx.logs.access='tail -250f /usr/local/etc/nginx/logs/access.log'
 alias nginx.logs.default.access='tail -250f /usr/local/etc/nginx/logs/default.access.log'
 alias nginx.logs.default-ssl.access='tail -250f /usr/local/etc/nginx/logs/default-ssl.access.log'
 
+alias pg.start="launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist"
+alias pg.stop="launchctl unload -w ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist"
+alias pg.restart='pg.stop && pg.start'
+
 alias sub1="open -a Sublime\ Text"
 alias ll='ls -al'
 ```
@@ -322,6 +326,9 @@ export CLICOLOR='Yes'
 export LSCOLORS='Exfxcxdxbxegedabagacad'
 source ~/.bash_aliases
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
+export GOPATH=/usr/local/Cellar/go/1.9.2
+export GOBIN=$GOPATH/bin
+export PATH=$PATH:$GOBIN
 ```
 <br/>
 
@@ -332,6 +339,9 @@ export PATH="/usr/local/sbin:$PATH"
 PHP_AUTOCONF="/usr/local/bin/autoconf"
 source ~/.bash_aliases
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
+export GOPATH=/usr/local/Cellar/go/1.9.2
+export GOBIN=$GOPATH/bin
+export PATH=$PATH:$GOBIN
 ```
 <br/>
 
