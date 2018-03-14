@@ -598,9 +598,39 @@ go
 
 **pgsql导入导出**
 
-`pg_dump –hlocalhost –U postgres –p 5432 –d dbname –f "D:/test.dump"` #导出指定库
+`pg_dump –h localhost –U postgres –p 5432 –d dbname –f "D:/test.dump"` #导出指定库
 
 `psql -h localhost -U postgres -d dbname -f "F:/hkm.dump"` #导入到指定库
+
+`psql [dbname]`  #进入交互命令行, 可连接指定数据库
+
+`alter user postgres with password '123456';` #修改用户密码
+
+`\password username` #或者这样修改密码
+
+`\du` #查看数据库用户列表
+
+`create user user1 with password '123456';`  #创建数据库用户
+
+`drop user user1;`  #删除用户
+
+`\l` #查看数据库列表
+
+`create database db1;` #创建数据库
+
+`drop database db1;`  #删除数据库
+
+`\c DatabaseName` #选择数据库
+
+`create table people(id int primary key not null,name char(20),salary real,info text);` #创建数据库表
+
+`drop table people;` #删除数据库表
+
+`\d` #查看数据库信息
+
+`\q`  #退出交互环境
+
+`\h`  #查看帮助
 
 **oracle 语句块**
 ```
