@@ -98,3 +98,13 @@ sudo apt-get remove apache*
 #安装nginx
 sudo apt-get -y install nginx
 ```
+
+**安装python3.6**
+```
+#ubuntu16.04自带python2.7.12和python3.5.2, 不要卸载
+
+sudo add-apt-repository ppa:jonathonf/python-3.6 
+sudo apt-get update 
+sudo apt-get install python3.6
+sudo apt-get install python3-pip
+```
