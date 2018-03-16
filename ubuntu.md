@@ -79,6 +79,12 @@ sudo apt-get -y install php7.1-mysql
 sudo apt-get -y install php7.1-fpm
 sudo apt-get -y install php7.1-curl php7.1-xml php7.1-mcrypt php7.1-json php7.1-gd php7.1-mbstring
 sudo apt-get -y install php-dev php-config php-pear php-xml
+
+#如果安装了多个版本php, 切换到php7.2
+sudo update-alternatives --set php /usr/bin/php7.2
+sudo update-alternatives --set php-config /usr/bin/php-config7.2
+sudo update-alternatives --set phpize /usr/bin/phpize7.2
+
 ```
 
 **安装nginx**
