@@ -79,4 +79,15 @@ sudo apt-get -y install php7.1-mysql
 sudo apt-get -y install php7.1-fpm
 sudo apt-get -y install php7.1-curl php7.1-xml php7.1-mcrypt php7.1-json php7.1-gd php7.1-mbstring  
 ```
-****
+
+**安装nginx**
+```
+#先检查是否启动了apache2
+ps -ef | grep apache2
+#停止apache2
+/etc/init.d/apache2 stop
+#卸载apache2
+sudo apt-get remove apache*
+#安装nginx
+sudo apt-get -y install nginx
+```
