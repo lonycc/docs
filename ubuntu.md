@@ -78,7 +78,7 @@ sudo apt-get -y install php7.1
 sudo apt-get -y install php7.1-mysql  
 sudo apt-get -y install php7.1-fpm
 sudo apt-get -y install php7.1-curl php7.1-xml php7.1-mcrypt php7.1-json php7.1-gd php7.1-mbstring
-sudo apt-get -y install php-pear
+sudo apt-get -y install php-dev php-config php-pear php-xml
 ```
 
 **安装nginx**
