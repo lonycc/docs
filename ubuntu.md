@@ -67,3 +67,16 @@ listen_addresses = '*'
 sudo gedit /etc/postgresql/9.5/main/pg_hba.conf
 host all all 0.0.0.0 0.0.0.0 md5
 ```
+
+**安装php**
+```
+sudo apt-get install software-properties-common  
+sudo LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php  
+sudo apt-get update
+apt-cache search php7.1
+sudo apt-get -y install php7.1
+sudo apt-get -y install php7.1-mysql  
+sudo apt-get -y install php7.1-fpm
+sudo apt-get -y install php7.1-curl php7.1-xml php7.1-mcrypt php7.1-json php7.1-gd php7.1-mbstring  
+```
+****
