@@ -251,7 +251,7 @@ python setup.py sdist upload
 
 **安装服务**
 
-`brew install postgresql/mongodb/redis/nginx/mysql/php/python/python3/go/rabbitmq`
+`brew install postgresql/mongodb/redis/nginx/mysql/php/python/python3/go/rabbitmq/influxdb/grafana`
 
 [mac下nmp环境搭建](https://blog.frd.mn/install-nginx-php-fpm-mysql-and-phpmyadmin-on-os-x-mavericks-using-homebrew/)
 
@@ -269,7 +269,7 @@ pytesseract系统依赖
 
 `brew install leptonica tesseract`
 
-`brew install php56-mongo [--build-from-source]` # 安装php-mongo扩展
+`brew install php72-mongo [--build-from-source]` # 安装php-mongo扩展
 
 <br/>
 
