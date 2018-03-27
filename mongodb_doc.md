@@ -141,7 +141,7 @@ $lt; 小于  $gte; 大于等于  $lte;  小于等于
 
 - db.collName.insert({_id:1,"name":"n2"});  若主键为1的记录存在，则会报错，而save则会修改记录
 
-- db.collName.update({age:25},{$set:{name:'changeName'}},false,true};  相当于update collName set name='changeName' where age=25;
+- db.collName.update({age:25},{$set:{name:'changeName'}},false,true);  相当于update collName set name='changeName' where age=25;
 
 - db.collName.update({name:'Lishi'},{$inc:{age:50}},false,true);相当于update collName set age=age+50 where name='Lishi';
 
