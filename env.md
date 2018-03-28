@@ -39,6 +39,7 @@ proxy=null
 
 
 Mac系统下全局配置文件在`/usr/local/etc/npmrc`，升级node版本用`n stable`，但事先要全局安装`npm install -g n`。
+linux系统下全局配置文件在`$HOME/.npmrc`
 
 ## 2. git客户端
 
