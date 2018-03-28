@@ -112,10 +112,11 @@ sudo apt-get install python3-pip
 **升级python3.6导致apt-pkg模块找不到问题**
 ```
 sudo apt-get remove --purge python-apt  
-sudo apt-get install python-apt -f  
+sudo apt-get install python-apt -f
+sudo apt-get install python3.5-gdbm
 sudo find / -name "apt_pkg.cpython-35m-x86_64-linux-gnu.so"  
 cd /usr/lib/python3/dist-packages/  
-sudo cp apt_pkg.cpython-35m-x86_64-linux-gnu.so apt_pkg.cpython-36m-x86_64-linux-gnu.so   
+sudo cp apt_pkg.cpython-35m-x86_64-linux-gnu.so apt_pkg.cpython-36m-x86_64-linux-gnu.so
 ```
 
 **安装sublime text3**
