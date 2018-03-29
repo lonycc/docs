@@ -385,7 +385,7 @@ export PATH=$PATH:$GOBIN
 
 ```
 brew update
-brew install docker
+brew cask install docker  #安装ui版docker
 brew install docker-machine
 brew install docker-compose
 
