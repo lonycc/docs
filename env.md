@@ -287,8 +287,8 @@ alias nginx.start='sudo launchctl load ~/Library/LaunchDaemons/homebrew.mxcl.ngi
 alias nginx.stop='sudo launchctl unload ~/Library/LaunchDaemons/homebrew.mxcl.nginx.plist'
 alias nginx.restart='nginx.stop && nginx.start'
 
-alias php-fpm.start="launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.php56.plist"
-alias php-fpm.stop="launchctl unload -w ~/Library/LaunchAgents/homebrew.mxcl.php56.plist"
+alias php-fpm.start="launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.php.plist"
+alias php-fpm.stop="launchctl unload -w ~/Library/LaunchAgents/homebrew.mxcl.php.plist"
 alias php-fpm.restart='php-fpm.stop && php-fpm.start'
 
 alias mongod.start="launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist"
@@ -327,7 +327,8 @@ export CLICOLOR='Yes'
 export LSCOLORS='Exfxcxdxbxegedabagacad'
 source ~/.bash_aliases
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
-export GOPATH=/usr/local/Cellar/go/1.9.2
+export DOCKER_HOST=tcp://127.0.0.1:4243
+export GOPATH=/usr/local/Cellar/go/1.10
 export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN
 ```
@@ -340,7 +341,8 @@ export PATH="/usr/local/sbin:$PATH"
 PHP_AUTOCONF="/usr/local/bin/autoconf"
 source ~/.bash_aliases
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
-export GOPATH=/usr/local/Cellar/go/1.9.2
+export DOCKER_HOST=tcp://127.0.0.1:4243
+export GOPATH=/usr/local/Cellar/go/1.10
 export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN
 ```
@@ -350,14 +352,6 @@ export PATH=$PATH:$GOBIN
 ## golang 环境变量设置
 
 `go env`
-
-`vim ~/.bash_profile`
-
-```
-export GOPATH=/usr/local/Cellar/go/1.8.3
-export GOBIN=$GOPATH/bin
-export PATH=$PATH:$GOBIN
-```
 
 解决从`golang.org`下载依赖失败的问题
 
@@ -386,3 +380,16 @@ export PATH=$PATH:$GOBIN
 修改第214行`c.NotebookApp.notebook_dir = 'F:\\myjob\\python'`, 
 
 如果要修改字体, 找到安装目录下的 `/lib/site-packages/notebook/static/custom/custom.css` 修改样式即可.
+
+**mac docker**
+
+```
+brew update
+brew install docker
+brew install docker-machine
+brew install docker-compose
+
+docker-machine create --driver virtualbox container_name
+docker-machine env container_name
+eval $(docker-machine env container_name)
+```
