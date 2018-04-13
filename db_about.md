@@ -73,15 +73,15 @@ set global group_concat_max_len=99999;
 set session group_concat_max_len=99999;
 ```
 
-`insert into mysql.user(Host,User,Password) values('localhost','jeecn',password('jeecn'));`
+`create user 'test'@'localhost' identified by '123456';;`
 
 `flush privileges;`
 
-`create database jeecnDB;`
+`create database test;`
 
-`grant all on jeecnDB.* to jeecn@'localhost' identified by 'jeecn';`
+`grant all on test.* to test@'localhost' identified by '123456';`
 
-`grant [select,insert,update,delete,create drop,index,alter,grant,references,reload,shutdown,process,file] on jeecnDB.* to jeecn@'localhost' identified by 'jeecn';`
+`grant [select,insert,update,delete,create drop,index,alter,grant,references,reload,shutdown,process,file] on test.* to test@'localhost' identified by '123456';`
 
 `flush privileges;`
 
