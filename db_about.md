@@ -79,7 +79,7 @@ set session group_concat_max_len=99999;
 
 `create database test;`
 
-`grant all on test.* to test@'localhost' identified by '123456';`
+`grant all privileges on test.* to test@'localhost' identified by '123456';`
 
 `grant [select,insert,update,delete,create drop,index,alter,grant,references,reload,shutdown,process,file] on test.* to test@'localhost' identified by '123456';`
 
