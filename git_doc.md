@@ -458,3 +458,16 @@ $ git submodule update --init --recursive
 !/fw/sf/
 
 说明：忽略全部内容，但不忽略.gitignore文件、根目录下的/fw/bin/和/fw/sf/目录。
+
+## git下载仓库指定目录
+
+```
+mkdir project_folder
+cd project_folder
+git init
+gire remote add -f origin <origin_url>
+
+git config core.sparsecheckout true
+echo "cfg/*"> .git/info/sparse-checkout
+git pull origin master
+```
