@@ -393,3 +393,5 @@ docker-machine create --driver virtualbox container_name
 docker-machine env container_name
 eval $(docker-machine env container_name)
 ```
+
+`ffmpeg -i http://domain.com/xx.m3u8 "xx.mp4"` #下载合并直播流
