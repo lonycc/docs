@@ -81,3 +81,22 @@ class ImageUtil(object):
         region = region.transpose(Image.ROTATE_180) #距去区域旋转180度
         im.paste(region, box) #将截取的区域粘贴到原图上
 ```
+
+```
+import numpy as np
+from PIL import Image
+
+img = Image.open('example.png', 'r')
+has_alpha = img.mode == 'RGBA'  # 判断图片是否有α通道
+red, green, blue, alpha = img.split() # 获取 rgba 值
+alpha = img.split()[-1]
+img.putalpha(alpha)  #设置α值
+
+if img.mode in ('RGBA', 'LA') or (img.mode == 'P' and 'transparency' in img.info):
+    alpha = img.convert('RGBA').split()[-1]
+    bg = Image.new('RGBA', img.size, (255, 255, 255, 255)) #新建图层, RGBA模式
+    bg.paste(img, mask=alpha)
+
+img = np.array(img)  # 将图像转为矩阵
+img.shape  #矩阵形状
+```
