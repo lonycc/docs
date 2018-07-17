@@ -1605,3 +1605,12 @@ mount -a
 **忘记了mariadb的root密码**
 
 > 先停止服务`systemctl stop mariadb`, 找到配置文件`/etc/my.cnf`, 在`[mysqld]`段添加`skip-grant-tables`, 启动服务, 进入命令行更新密码即可.
+
+**/boot空间不足的解决办法**
+
+- umount /boot
+- mkdir /boot_old
+- mount /dev/sda1 /boot_old
+- cp -rp /boot_old/* /boot
+- 删除/etc/fstab中含有/boot的项
+
