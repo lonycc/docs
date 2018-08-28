@@ -294,3 +294,15 @@ extension="ldap.so"
 # 重启php-fpm
 service php-fpm restart
 ```
+
+**php-fpm启动/重启/停止**
+
+```
+INT, TERM 立刻终止
+QUIT 平滑终止
+USR1 重新打开日志文件
+USR2 平滑重载所有worker进程并重新载入配置和二进制模块
+
+kill -INT `cat /var/run/php-fpm.pid`  #停止
+kill -USR2 `cat /var/run/php-fpm.pid` #重启
+```
