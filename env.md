@@ -395,3 +395,13 @@ eval $(docker-machine env container_name)
 ```
 
 `ffmpeg -i http://domain.com/xx.m3u8 "xx.mp4"` #下载合并直播流
+
+**多个ssh key管理**
+
+```
+cd ~/.ssh
+
+ssh-keygen -t rsa -C  "my01@gitee.com" #回车重命名id_rsa_gitee
+
+ssh-add ~/.ssh/id_rsa_gitee #添加到ssh agent
+```
