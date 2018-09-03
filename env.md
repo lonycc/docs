@@ -404,4 +404,43 @@ cd ~/.ssh
 ssh-keygen -t rsa -C  "my01@gitee.com" #回车重命名id_rsa_gitee
 
 ssh-add ~/.ssh/id_rsa_gitee #添加到ssh agent
+
+ssh-add ~/.ssh/id_rsa
+
+ssh-add -l  #列表
+
+ssh-add -D #删除
+
+vim config #创建config文件
+# first user(first@email.com)
+Host gitee
+ HostName gitee.com
+ User git
+ IdentityFile /Users/bombvote-zql/.ssh/id_rsa_gitee
+
+# second user(second@email.com)
+Host github-test
+ HostName github.com
+ User git
+ IdentityFile /Users/bombvote-zql/.ssh/id_ras_github
+ 
+# 添加远程仓库
+git remote add origin_name git@github.com:second/test.git 或者用别名git@github:second/test.git
 ```
+
+**git push到多个仓库**
+
+```
+1. 添加远程仓库
+git remote add origin_1 git@xx.com:test/abc.git
+git remote add origin_2 git@yy.com:test/abc.git
+
+2. 合并
+git fetch origin_1
+git rebase -i origin_1/master
+
+3. 推送
+git push -f origin_1 master
+git push -f origin_2 master
+```
+
