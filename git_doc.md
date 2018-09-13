@@ -471,3 +471,12 @@ git config core.sparsecheckout true
 echo "cfg/*"> .git/info/sparse-checkout
 git pull origin master
 ```
+
+
+`git revert HEAD` #放弃最后一次提交
+
+`git reset --hard HEAD^` #回到上一次提交
+
+`git push origin master -f` #强制提交
+
+`git rebase -i "commit id"` #删除历史某次提交
