@@ -409,3 +409,21 @@ gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
 `show slave status\G`
 
 > 注：如果重启mariadb会导致server_id丢失, 那么就在`/etc/my.cnf`配置`server_id = 5`
+
+**安装redis**
+
+```
+# 下载
+wget http://download.redis.io/releases/redis-4.0.11.tar.gz
+# 解压
+tar -zxvf redis-4.0.11.tar.gz -C /usr/local
+# 编译安装
+cd /usr/local/redis-4.0.11
+make MALLOC=libc
+cd src && make install
+# 修改配置文件, 以守护进程常驻内存
+vim /usr/local/redis-4.0.11/redis.conf
+daemonize no => daemonize yes
+# 运行
+/usr/local/redis-4.0.11/src/redis-server /usr/local/redis-4.0.11/redis.conf
+```
