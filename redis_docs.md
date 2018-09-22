@@ -319,3 +319,18 @@ evicted_keys:0      #运行以来删除过的key
 则命中率=`keyspace_hits / (keyspace_hits + keyspace_misses)`, 得到结果`98.66%`.
 
 [redis-stat查看工具](https://github.com/junegunn/redis-stat)
+
+
+**关于redis使用的几个点**
+
+1. 生产环境下禁用`keys`命令, 因为该命令执行模糊匹配, 在key很多的时候, 造成cpu线程阻塞, 引发redis锁. 同理用`smembers`返回集合下所有元素, 也会堵塞线程. 用`scan`命令代替.
+2. 高频热数据[qps>5000]才存储到redis(内存)中, 低频冷数据存放在mysql/mongodb/es(磁盘).
+3. redis做缓存使用, 则存放的key一定要设置过期时间.
+4. 存储大文本数据(超过500B)一定要先压缩再存储, 例如`gzip.compress(text.encode())`.
+5. redis list做消息队列服务, `rpop` `lpush`操作, 消费者原子性操作队列.
+6. 使用hash结构存储对象属性, 属性个数太多(100+), `hgetall`命令会导致效率急剧下降, 可以考虑拆分多个hash结构.
+7. 根据业务场景使用不同数据结构类型, string类型用于普通k-v; hash可用于对象; list用于消息队列、粉丝/关注列表等; set用于推荐, sorted set用于排行榜.
+8. 线上禁用`monitor`命令, 高并发条件下, 内存会暴增.
+9. 禁用大string(1MB以上), 会导致网络IO剧增.
+10. 单实例内存大小建议10~20GB, 包含的key个数建议在1kw内.
+11. 使用redis健康监控工具定时监控, 客户端尽量使用连接池.
