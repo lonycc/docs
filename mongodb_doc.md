@@ -282,6 +282,10 @@ db.jandan_duan.find({'content': /日本$/}).pretty()   # like '%日本'
 db.jandan_duan.distinct('author')  # 唯一性
 
 db.jandan_duan.aggregate([{$group: {}}])
+
+db.news.find({'category':'car'}, {'title':1, 'pdate':1}) #只返回_id/title/pdate字段
+
+db.news.find({'category':'car'}, {'content':0})  #只过滤content字段
 ```
 
 <br/>
