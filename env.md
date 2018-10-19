@@ -50,10 +50,10 @@ Windows系统下全局配置文件在`C:\User\[用户名]\.gitconfig`，Mac或Li
 Windows系统配置文件`C:\User\tony\pip\pip.ini`，Mac和Linux配置文件`$HOME/.pip/pip.conf`
 ```
 [global]
-index-url=http://pypi.doubanio.com/simple/
+index-url=http://mirrors.aliyun.com/pypi/simple/
 timeout=60
 find-links=http://download.example.com
-trusted-host = pypi.doubanio.com
+trusted-host = mirrors.aliyun.com
 disable-pip-version-check=true 
 
 [install]
