@@ -847,9 +847,19 @@ iftop
 
 `/usr/local/python2.7/bin/python2.7 -V`  #验证版本
 
-`ln -s  /usr/local/python2.7/bin/python2.7 /usr/bin/python27`  #创建文件软链
+`ln -fs /usr/local/python2.7/bin/python /usr/bin/python`  #创建文件软链
 
-`python27 -V`
+`python -V`
+
+为防止yum使用失败, 修改`/usr/bin/yum`, 将引用头改成`#!/usr/bin/python2.6`
+
+去`https://pypi.org/project/setuptools/#files`下载`setuptools`压缩包, 解压后`python setup.py install`, 
+
+`ln -fs /usr/local/python2.7/bin/easy_install /usr/bin/easy_install`
+
+`easy_install --version`
+
+`easy`
 
 <br/>
 
