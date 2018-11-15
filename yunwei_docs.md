@@ -1624,3 +1624,12 @@ mount -a
 - cp -rp /boot_old/* /boot
 - 删除/etc/fstab中含有/boot的项
 
+**unzip无法解压大zip包解决办法**
+
+```
+先去下载 http://sourceforge.mirrorservice.org/p/p7/p7zip/p7zip/16.02/p7zip_16.02_src_all.tar.bz2, 
+解压安装 tar xvjf p7zip_16.02_src_all.tar.bz2
+cd p7zip_16.02
+make && make install
+使用7za命令解压即可 7za x file.zip
+```
