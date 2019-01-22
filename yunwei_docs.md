@@ -1631,5 +1631,9 @@ mount -a
 解压安装 tar xvjf p7zip_16.02_src_all.tar.bz2
 cd p7zip_16.02
 make && make install
-使用7za命令解压即可 7za x file.zip -o/path/to/xxx/  #解压到指定目录, 注意-o后没有空格
+使用7za命令解压即可 7za x file.zip -o/path/to/xxx/ -aoa  #解压到指定目录, 默认覆盖 注意-o后没有空格
 ```
+
+**unzip 解压**
+
+`unzip -o -O GBK /opt/filebrowser_dir/trs/171/webpic_20181222.zip -d /data/site/staticize/171/`
