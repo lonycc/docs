@@ -111,3 +111,6 @@ make && make install
 ```
 
 > 若服务端采用了编译安装的方式,则无需安装xinetd,启动方式略有不同: `./rsync --daemon --config=/etc/rsyncd.conf`
+
+
+`rsync -av --delete --exclude-from="/root/exclude.list" root@219.135.157.226:/data/site/staticize/{219,144,168} /opt/www/staticize`  # --delete参数以源为准, 对目标进行多删少补的同步
