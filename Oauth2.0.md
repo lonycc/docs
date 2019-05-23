@@ -105,3 +105,30 @@ function get_userinfo()
 	}
 }
 ```
+
+
+[微信公众号网页授权](https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140842)
+
+1 第一步：用户同意授权，获取code
+
+```
+https://open.weixin.qq.com/connect/oauth2/authorize?appid={}&redirect_uri={}&response_type=code&scope={}&state={}#wechat_redirect
+
+appid: 公众号后台查
+state: 任意
+scope: snsapi_base/snsapi_userinfo
+redirect_uri: https地址
+
+snsapi_base模式, 静默授权
+snsapi_userinfo模式, 显式授权
+
+授权后, 跳转到redirect_uri,带上code和state
+```
+
+2 第二步：通过code换取网页授权access_token
+
+```
+https://api.weixin.qq.com/sns/oauth2/access_token?appid={}&secret={}&code={上一步获取的code}&grant_type=authorization_code
+
+拿到openid, 对于一个公众号, 一个用户的openid是唯一的
+```
