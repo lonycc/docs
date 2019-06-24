@@ -135,6 +135,8 @@
 
 `subscribe channel_1 [channel_2 ...]` #起一个客户端, 订阅若干个频道, 将会进入监听状态, 有消息就能收到
 
+`psubscribe pattern [pattern ..]` #订阅多个给定模式的频道
+
 `pushlish channel_1 "what the fuck"` #另起一个客户端, 发布一条消息到channel_1
 
 `unsubscribe channel_1 [channel_2 ...]` #取消订阅频道
@@ -143,7 +145,11 @@
 
 `pubsub [subcommand] [argument [argument ...]]` #查看订阅与发布系统状态
 
-`psubscribe pattern [pattern ..]` #订阅多个给定模式的频道
+`pubsub channels [pattern]`  #列出当前活跃频道
+
+`pubsub numsub [channel-1 ... channel-n]`  #返回给定频道的订阅者数量
+
+`pubsub numpat`  #返回订阅模式的数量
 
 ## Redis 事务
 
