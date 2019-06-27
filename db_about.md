@@ -10,6 +10,10 @@
 
 `drop table o_stream_dishi`;  # 删除临时表
 
+`alter table logs add column title varchar(255);`  # 新增字段
+
+`pragma table_info (logs);`  # 查看表结构
+
 ## [sqlite 导出表结构和数据](http://blog.csdn.net/flyingroc0209/article/details/51721206)
 
 > 先去[官网](https://www.sqlite.org/download.html)下载工具. 解压后进入命令行
