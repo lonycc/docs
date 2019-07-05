@@ -100,6 +100,8 @@ $lt; 小于  $gte; 大于等于  $lte;  小于等于
 
 - `db.collName.find({name:/^mongo/})`;  相当于select * from collName where name like 'mongo%';
 
+- `db.collName.find({name: {$not: /mongo/} });`  not like
+
 - db.collName.find({},{name:1,age:1});  相当于select name,age from collName;
 
 - db.collName.find({age:{$gt:25}},{name:1,age:1});  相当于select name,age from collName where age>25;
