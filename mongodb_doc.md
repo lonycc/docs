@@ -389,3 +389,36 @@ security:
 `mongoimport --host=127.0.0.1 --port=27017 -uusername -ppassword --db=mydb --collection=mycollection --type=json --file=/home/mydb/mycollection.json`
 
 <br/><br/>
+
+
+**pymongo**
+
+```
+import pymongo
+from bson.objectid import ObjectId
+
+# ObjectId(_id)  # 将string类型_id转为bson.objectid
+
+m_client = pymongo.MongoClient('mongodb://localhost:27017')
+m_client.list_database_names()
+m_db = m_client.mydb  # or m_client['mydb']
+m_db.auth('username', 'password')  # when needed
+m_db.list_collection_names()
+m_col = m_db.mycol  # or m_db['mycol']
+m_col.find({'title': {'$not': re.compile('mongo')}})  # 和原生语句的区别在于正则语句的配置
+m_col.find_one({'name': 'tony'}).sort('pdate')  #条件可为空
+m_col.count_documents({})  # 统计
+m_col.create_index([('uid', pymongo.ASCENDING)], unique=True)  # 创建索引
+m_col.index_information()  # 索引信息
+m_col.remove_one({})
+m_col.remove_many({})
+m_col.update_one({'_id': _id}, {'$set': {'key': 'value'}})
+m_col.update_many({}, {})
+
+rs = m_col.insert_many([dict(), dict(), dict()])  # 多条插入
+rs.inserted_ids  # 返回多个_id
+rs = m_col.insert_one(dict())  #单条
+rs.inserted_id  # 单个_id
+
+
+```
