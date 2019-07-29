@@ -316,16 +316,6 @@ export PATH=$PATH:$GOBIN
 <br/>
 
 
-## golang 环境变量设置
-
-`go env`
-
-解决从`golang.org`下载依赖失败的问题
-
-`mkdir -p $GOPATH/src/golang.org/x`
-
-`cd $GOPATH/src/golang.org/x && git clone https://github.com/golang/net.git`
-
 
 ## 编译安装pkgconfig
 
@@ -394,6 +384,9 @@ Host github-test
 # 添加远程仓库
 git remote add origin_name git@github.com:second/test.git 或者用别名git@github:second/test.git
 ```
+
+
+
 
 **python pip 源**
 
