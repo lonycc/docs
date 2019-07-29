@@ -39,20 +39,20 @@ proxy=null
 
 
 Mac系统下全局配置文件在`/usr/local/etc/npmrc`，升级node版本用`n stable`，但事先要全局安装`npm install -g n`。
-linux系统下全局配置文件在`$HOME/.npmrc`
+linux系统下全局配置文件在`~/.npmrc`
 
 ## 2. git客户端
 
-Windows系统下全局配置文件在`C:\User\[用户名]\.gitconfig`，Mac或Linux系统下在`~/.gitconfig`(root用户)
+Windows系统下全局配置文件在`C:\User\[用户名]\.gitconfig`，Mac或Linux系统下在`~/.gitconfig`
 
 ## 3. pip源
 
-Windows系统配置文件`C:\User\tony\pip\pip.ini`，Mac和Linux配置文件`$HOME/.pip/pip.conf`
+Windows系统配置文件`C:\User\tony\pip\pip.ini`，Mac和Linux配置文件`~/.pip/pip.conf`
 ```
 [global]
 index-url=http://mirrors.aliyun.com/pypi/simple/
 timeout=60
-find-links=http://download.example.com
+find-links=/usr/local/downloads
 trusted-host = mirrors.aliyun.com
 disable-pip-version-check=true 
 
@@ -70,43 +70,12 @@ timeout=10
 
 `export PIP_DEFAULT_TIMEOUT=60` 效果同  `pip --default-timeout=60 [...]`
 
-`export PIP_FIND_LINKS="http://mirror1.example.com http://mirror2.example.com"`
+`export PIP_FIND_LINKS="http://pypi.doubanio.com/simple/ http://pypi.doubanio.com/simple/"`
 
 效果同
 
- `pip install --find-links=http://mirror1.example.com --find-links=http://mirror2.example.com`
+ `pip install --find-links=http://pypi.doubanio.com/simple/ --find-links=http://pypi.doubanio.com/simple/`
 
-当然也可以直接修改pip模块源码：
-
-- Windows系统下
-
-`%python_home%\Lib\site-packages\pip\cmdoptions.py`
-```
-index_url = partial(
-    Option,
-    '-i', '--index-url', '--pypi-url',
-    dest='index_url',
-    metavar='URL',
-    #default=PyPI.simple_url,
-    default=http://pypi.doubanio.com/simple/,
-    help='Base URL of Python Package Index (default %default).')
-```
-`%python_home%\Lib\site-packages\pip\commands\search.py`
-```
-    def __init__(self, *args, **kw):
-        super(SearchCommand, self).__init__(*args, **kw)
-        self.cmd_opts.add_option(
-            '--index',
-            dest='index',
-            metavar='URL',
-            #default=PyPI.pypi_url,
-            default=http://pypi.doubanio.com/simple/,
-            help='Base URL of Python Package Index (default %default)')
-
-        self.parser.insert_option_group(0, self.cmd_opts)
-```
-
-- Linux系统下
 
 `easy_install -i http://pypi.doubanio.com/simple/ fabric`
 
@@ -125,17 +94,15 @@ index_url=http://pypi.tuna.tsinghua.edu.cn/simple
 
 <br/>
 
-`pip install xxx -i http://pypi.douban.com/simple/`
+`pip install lxml -i http://pypi.douban.com/simple/`
 
-`pip install xxx -r req.tx -i https://pypi.doubanio.com/simple/`
+`pip install lxml -r req.tx -i https://pypi.doubanio.com/simple/`
 
-中科大源    `http://pypi.mirrors.ustc.edu.cn/`   
+中科大源  `http://pypi.mirrors.ustc.edu.cn/`   
 
 清华源  `https://mirrors.tuna.tsinghua.edu.cn/`
 
 阿里源  `http://mirrors.aliyun.com/`
-
-`pip install pymysql -i http://pypi.zenlogic.net/simple/`
 
 ### pip的一些命令
 
@@ -195,7 +162,7 @@ python setup.py sdist upload
 
 ## 4. gem源
 
-`gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/`
+`gem sources --add https://gems.ruby-china.com/ --remove https://rubygems.org/`
 
 `gem sources -l`
 
