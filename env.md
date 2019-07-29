@@ -395,19 +395,78 @@ Host github-test
 git remote add origin_name git@github.com:second/test.git 或者用别名git@github:second/test.git
 ```
 
-**git push到多个仓库**
+**python pip 源**
+
+先确保 `~/.pip/pip.conf` 存在, 不存在则创建
 
 ```
-1. 添加远程仓库
-git remote add origin_1 git@xx.com:test/abc.git
-git remote add origin_2 git@yy.com:test/abc.git
-
-2. 合并
-git fetch origin_1
-git rebase -i origin_1/master
-
-3. 推送
-git push -f origin_1 master
-git push -f origin_2 master
+tee ~/.pip/pip.conf <<-'EOF'
+[global]
+index-url = http://mirrors.aliyun.com/pypi/simple/
+[install]
+trusted-host = mirrors.aliyun.com
+EOF
 ```
 
+
+**node npm 源**
+
+先确保 `~/.npmrc` 存在, 不存在则创建
+
+```
+tee ~/.npmrc <<-'EOF'
+registry=http://registry.npm.taobao.org/
+disturl=https://npm.taobao.org/dist
+EOF
+```
+
+或者也可以这样:
+
+```
+npm i -g nrm
+nrm use taobao
+```
+
+
+**php composer 源**
+
+`composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/`  # 全局
+
+`composer config repo.packagist composer https://mirrors.aliyun.com/composer/`  # 当前项目
+
+
+**java maven 源**
+
+找到maven安装目录下的conf目录下的settings.xml, 在<mirrors></mirrors>内添加如下镜像:
+
+```
+<mirror>
+    <id>aliyunmaven</id>
+    <mirrorOf>*</mirrorOf>
+    <name>阿里云maven仓库</name>
+    <url>https://maven.aliyun.com/repository/public</url>
+</mirror>
+```
+
+**ruby gem 源**
+
+`gem sources --add https://gems.ruby-china.com/ --remove https://rubygems.org/`
+
+
+**go mod 源**
+
+```
+vim ~/.bash_profile
+
+# 增加下面两行使用代理
+export GOPROXY="https://mirrors.aliyun.com/goproxy/"
+export GO111MODULE=on
+
+source ~/.bash_profile
+```
+
+其他可选goproxy有
+
+`https://goproxy.cn`
+
+`https://athens.azurefd.net`
