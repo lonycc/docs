@@ -463,3 +463,16 @@ source ~/.bash_profile
 `https://goproxy.cn`
 
 `https://athens.azurefd.net`
+
+**rust crates.io源**
+
+```
+`vim ~/.cargo/config`
+
+# 增加如下内容, 注意source.ustc.registry也可以用https协议
+[source.crates-io]
+registry = "https://github.com/rust-lang/crates.io-index"
+replace-with = 'ustc'
+[source.ustc]
+registry = "git://mirrors.ustc.edu.cn/crates.io-index"
+```
