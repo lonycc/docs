@@ -1637,3 +1637,41 @@ make && make install
 **unzip 解压**
 
 `unzip -o -O GBK /opt/filebrowser_dir/trs/171/webpic_20181222.zip -d /data/site/staticize/171/`
+
+
+
+**lvm挂载新硬盘并扩容**
+
+```
+fdisk -l  # 磁盘列表
+fdisk /dev/vdb  # 分区
+n # 进行分区
+p # 基本分区
+t # 变更分区类型
+8e # linux lvm
+w  # 保存退出
+
+yum -y install lvm2
+
+pvcreate /dev/vdb1  # 创建物理卷
+pvdisplay
+pvdisplay /dev/vdb1 -v  # 查看物理卷
+
+vgcreate lvm_data /dev/vdb1  # 创建vg
+vgdisplay  # lv可用空间为Free PE * PE Size / 1024
+vgdisplay lvm_data -v
+
+lvcreate -L +299.996G -n lvmdata lvm_data
+lvdisplay lvm_data -v
+mkfs.ext4 /dev/lvm_data/lvmdata
+
+mkdir /data
+mount /dev/mapper/lvm_data-lvmdata /data
+
+vi /etc/fstab
+# 新增一行
+/dev/mapper/lvm_data-lvmdata /data ext4 defaults 0 0
+
+umount /data
+mount -a
+```
