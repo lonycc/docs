@@ -343,3 +343,10 @@ DELETE FROM Person WHERE ID NOT IN (SELECT * FROM (SELECT MIN(Id) FROM Person p 
 eg:成绩排名的，分数相同的并列排名，并且排名之间不跳跃
 SELECT Score, Rank FROM( SELECT Score, @curRank := @curRank + IF(@prevScore = Score, 0, 1) AS Rank, @prevScore := Score FROM Scores s, (SELECT @curRank := 0) r, (SELECT @prevScore := NULL) p ORDER BY Score DESC ) t;
 SELECT Scores.Score, COUNT(Ranking.Score) AS RANK FROM Scores , ( SELECT DISTINCT Score FROM Scores ) Ranking WHERE Scores.Score <= Ranking.Score GROUP BY Scores.Id, Scores.Score ORDER BY Scores.Score DESC;
+
+事务隔离
+mysql服务器允许多个事务并发执行，为了保障安全，提供了四种隔离级别, 用来限制不同事务之间的干扰
+read uncommitted(读未提交)    A、B两个事务，A事务能读取到B事务未提交的insert/update数据; (最低等级)
+read committed(读提交)        A、B两个事务，A事务只能读取到B事务已经提交的insert/update数据; (大部分数据库默认级别)
+repeatable read(可重复读)     A、B两个事务，A事务在B事务提交前后读取到的数据是一致的;  (mysql默认隔离级别)
+serializable(串行化)          A、B两个事务，B事务正在执行, A事务必须等待当前事务commit后才能执行; (最高等级)
