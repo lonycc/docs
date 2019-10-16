@@ -398,5 +398,5 @@ xrange key - +
 # 消息监控
 xinfo stream key
 xinfo consumers key groupname
-xinfo groups groupname
+xinfo groups key
 ```
