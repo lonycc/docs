@@ -340,3 +340,63 @@ evicted_keys:0      #运行以来删除过的key
 9. 禁用大string(1MB以上), 会导致网络IO剧增.
 10. 单实例内存大小建议10~20GB, 包含的key个数建议在1kw内.
 11. 使用redis健康监控工具定时监控, 客户端尽量使用连接池.
+
+
+Redis5.0
+
+新增Stream数据结构, 它是支持多播可持久化的消息队列;
+
+1. Redis Stream有一个消息链表，将所有加入的消息都串起来，每个消息都有一个唯一的ID和对应的内容。消息是持久化的，Redis重启后，内容还在。
+
+2. 每个消费组都有一个Stream内唯一的名称，消费组不会自动创建，它需要单独的指令xgroup create进行创建，需要指定从Stream的某个消息ID开始消费，这个ID用来初始化last_delivered_id变量。
+
+3. 每个Stream都可以挂多个消费组，每个消费组会有个游标last_delivered_id在Stream数组之上往前移动，表示当前消费组已经消费到哪条消息了。
+
+4. 同一个消费组(Consumer Group)可以挂接多个消费者(Consumer)，这些消费者之间是竞争关系，任意一个消费者读取了消息都会使游标last_delivered_id往前移动。每个消费者都有一个组内唯一名称。【但是每个消费者并没有消费到哪条消息的单独记录，所以后续队列的消费者就是一个只含有一个消费者的消费组，这样可以方便记录更多信息】
+
+5. 消费者(Consumer)内部会有个状态变量pending_ids，它记录了当前已经被客户端读取的消息，但是还没有ack。如果客户端没有ack，这个变量里面的消息ID会越来越多，一旦某个消息被ack，它就开始减少。这个pending_ids变量用来确保客户端至少消费了消息一次，而不会在网络传输的中途丢失了没处理。
+
+```
+# 生产, 在消息队列key上生成key/value对, 其中id常用*
+xadd key id field string [field string ...]  其中id常用*
+# 查看
+xrange key start end [COUNT count]
+# 逆序查看
+xrevrange key start end [COUNT count]
+# 长度
+xlen key
+# 消费, count表示限定消息条数， block用于设置阻塞时间
+XREAD [COUNT count] [BLOCK milliseconds] STREAMS key [key ...] ID [ID ...]
+
+multi批处理, 验证序号递增
+multi
+xadd key * k1 v1
+xadd key * k1 v2
+exec
+
+
+# 在消息队列key上创建消费组groupname, 从第id条开始消费
+xgroup create key groupname id-or-$
+# 设置起始id
+xgroup setid key id-or-$   
+# 销毁消息队列上的消费组
+xgroup destroy key groupname  
+# 组groupname内消费者conA在队列key上消费一条未被消费的起始消息
+xreadgroup group groupname conA count i streams key >
+# 查看等待列表
+xpending key groupname [start end count] [consumer]  
+# 确认消息已消费
+xack key groupname id [id ...]  
+# 消息转移, 将某个消息转移到自己的等待列表中, min-idle-time为最小等待时间(在这个时间后还未被处理的消息才能被转移)
+xclaim key groupname consumer min-idle-time ID
+
+# dead letter问题
+某个消息长期处于pending列表中, 不能被xack, 此消息的delivery counter就会累加, 当达到预设的临界值则被认为是死信, 可以删掉
+xdel key id
+xrange key - +
+
+# 消息监控
+xinfo stream key
+xinfo consumers key groupname
+xinfo groups groupname
+```
