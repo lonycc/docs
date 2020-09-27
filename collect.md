@@ -1,5 +1,3 @@
-**any docs**
-
 [algorithms](https://thealgorithms.github.io/website/)
 
 [rustcc](https://rustcc.gitbooks.io/rustprimer/content/)
@@ -14,7 +12,7 @@
 
 [learn go in x minutes](https://learnxinyminutes.com/docs/go/)
 
-[python wiki](https://wiki.python.org/moin/PythonDecoratorLibrary#Singleton)
+[python wiki](https://wiki.python.org/moin/)
 
 [go mega](https://go-mega.bonfy.im/)
 
@@ -22,21 +20,15 @@
 
 [linuxtoy](http://i.linuxtoy.org/docs/guide/index.html)
 
-[docker](http://udn.yyuap.com/doc/docker_practice/introduction/index.html)
+[docker practice](http://udn.yyuap.com/doc/docker_practice/introduction/index.html)
 
-[algorithm](https://algorithm.yuanbin.me/)
+[leetcode solution](https://algorithm.yuanbin.me/)
 
 [browserhacks](http://browserhacks.com/)
 
-[bitcoin develop guide](https://love2.io/@ayamefing/doc/bitcoin_developer_guide/README.md)
-
-[gorm](http://doc.gorm.io/)
-
 [go-zh](https://go-zh.org/)
 
-**github repo**
-
-[golang](https://github.com/arnauddri/algorithms)
+[golang algo](https://github.com/arnauddri/algorithms)
 
 [go live](https://github.com/gwuhaolin/livego)
 
@@ -47,8 +39,6 @@
 [go proxy nps](https://github.com/cnlh/nps)
 
 [php-func-in-go](https://github.com/syyongx/php2go)
-
-[gin-demo](https://github.com/blackpiglet/go-api-example)
 
 [1m-go-websockets](https://github.com/eranyanay/1m-go-websockets)
 
@@ -66,46 +56,17 @@
 
 [awesome-adb](https://github.com/mzlogin/awesome-adb)
 
-[internet hot news](https://github.com/telami/hot)
-
-
-**mirrors repos**
-
 [curl](https://curl.haxx.se/download/archeology/)
 
 [twisted release](http://twistedmatrix.com/Releases/)
 
-[linuxidc](http://linux.linuxidc.com/)
-
 [python wheels](https://www.lfd.uci.edu/~gohlke/pythonlibs/)
 
-[sourceforge mirror](http://sourceforge.mirrorservice.org/)
-
-ftp://ftp.openldap.org/pub/OpenLDAP/openldap-stable/
-
-[cdlinux](ftp://distro.ibiblio.org/pub/linux/distributions/cdlinux/testing/)
-
-
-**just fun**
-
-[win10 active](https://cmwtat.cloudmoe.com/cn.html)
-
-[how to write bug](https://coderlmn.github.io/frontEndCourse/unmaintainable.html)
-
-[backend interview](https://aleiwu.com/post/interview-experience/)
-
-
-**websites**
+[text classfier data](http://thuctc.thunlp.org/)
 
 [waifu2x](http://waifu2x.udp.jp/)
 
-[ipfs img](https://img9.top/)
-
-[tu gzip](http://tu.xiaogongju123.com/)
-
 [april1985](http://www.april1985.com/)
-
-[tensorflow about](http://blog.topspeedsnail.com/)
 
 [imququ](https://imququ.com/)
 
@@ -116,3 +77,9 @@ ftp://ftp.openldap.org/pub/OpenLDAP/openldap-stable/
 [hex editor](https://hexed.it/)
 
 [youtube video](http://mydowndown.com/y2)
+
+[win10 active](https://cmwtat.cloudmoe.com/cn.html)
+
+[how to write bug](https://coderlmn.github.io/frontEndCourse/unmaintainable.html)
+
+[backend interview](https://aleiwu.com/post/interview-experience/)
